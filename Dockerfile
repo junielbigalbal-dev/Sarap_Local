@@ -1,7 +1,6 @@
-# Use PHP-FPM official image
 FROM php:8.2-fpm
 
-# Install dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     nginx \
     supervisor \
@@ -11,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 # Copy project files to Nginx root
 COPY . /var/www/html
 
-# Copy Nginx and Supervisor configs
+# Copy configs
 COPY default.conf /etc/nginx/conf.d/default.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
