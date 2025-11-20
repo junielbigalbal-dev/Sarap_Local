@@ -1,0 +1,9 @@
+sservices:
+  - type: web
+    name: sarap-local
+    env: docker
+    plan: free
+    region: singapore
+    repo: https://github.com/junielbigalbal-dev/Sarap_Local
+    branch: main
+    dockerfilePath: Dockerfile
