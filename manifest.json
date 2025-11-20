@@ -1,0 +1,23 @@
+{
+  "name": "Sarap Local — Local Food Marketplace",
+  "short_name": "Sarap Local",
+  "start_url": "./index.php",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF7F2",
+  "theme_color": "#C46A2B",
+  "description": "Discover and order delicious local food from nearby vendors on Sarap Local.",
+  "icons": [
+    {
+      "src": "images/S.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/S.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

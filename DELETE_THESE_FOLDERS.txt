@@ -1,0 +1,93 @@
+================================================================================
+DELETE THESE FOLDERS AND FILES MANUALLY
+================================================================================
+
+RIGHT-CLICK AND DELETE (or use command line):
+
+1. DELETE ENTIRE FOLDER:
+   c:\xampp\htdocs\sarap_local\app\
+   
+   This contains 34 duplicate files:
+   - app/api/ (16 files)
+   - app/helpers/ (3 files)
+   - app/views/ (15 files)
+
+2. DELETE EMPTY FOLDERS:
+   c:\xampp\htdocs\sarap_local\bootstrap\
+   c:\xampp\htdocs\sarap_local\routes\
+   c:\xampp\htdocs\sarap_local\storage\
+   c:\xampp\htdocs\sarap_local\config\
+   c:\xampp\htdocs\sarap_local\public\
+
+3. DELETE THESE FILES:
+   c:\xampp\htdocs\sarap_local\CLEANUP.php
+   c:\xampp\htdocs\sarap_local\FORCE_CLEANUP.php (if exists)
+   c:\xampp\htdocs\sarap_local\DELETE_APP_FOLDER.php (if exists)
+
+================================================================================
+COMMAND LINE (Windows PowerShell):
+================================================================================
+
+Run these commands:
+
+Remove-Item -Path "C:\xampp\htdocs\sarap_local\app" -Recurse -Force
+Remove-Item -Path "C:\xampp\htdocs\sarap_local\bootstrap" -Recurse -Force
+Remove-Item -Path "C:\xampp\htdocs\sarap_local\routes" -Recurse -Force
+Remove-Item -Path "C:\xampp\htdocs\sarap_local\storage" -Recurse -Force
+Remove-Item -Path "C:\xampp\htdocs\sarap_local\config" -Recurse -Force
+Remove-Item -Path "C:\xampp\htdocs\sarap_local\public" -Recurse -Force
+Remove-Item -Path "C:\xampp\htdocs\sarap_local\CLEANUP.php" -Force
+
+================================================================================
+COMMAND LINE (Windows CMD):
+================================================================================
+
+Run these commands:
+
+rmdir /s /q "C:\xampp\htdocs\sarap_local\app"
+rmdir /s /q "C:\xampp\htdocs\sarap_local\bootstrap"
+rmdir /s /q "C:\xampp\htdocs\sarap_local\routes"
+rmdir /s /q "C:\xampp\htdocs\sarap_local\storage"
+rmdir /s /q "C:\xampp\htdocs\sarap_local\config"
+rmdir /s /q "C:\xampp\htdocs\sarap_local\public"
+del "C:\xampp\htdocs\sarap_local\CLEANUP.php"
+
+================================================================================
+AFTER DELETION:
+================================================================================
+
+Your project will have ONLY:
+
+✅ login.php (main login page)
+✅ signup.php (main signup page)
+✅ logout.php (main logout page)
+✅ customer.php (customer dashboard)
+✅ vendor.php (vendor dashboard)
+✅ admin.php (admin dashboard)
+✅ index.php (landing page)
+✅ profile.php (profile page)
+✅ search.php (search page)
+✅ product.php (product detail)
+✅ reels.php (food reels)
+✅ chat.php (chat/messages)
+✅ messages.php (messages)
+✅ vendor_profile.php (vendor profile)
+✅ error.php (error page)
+✅ db.php (database connection)
+✅ app_config.php (config)
+✅ suggestions.php (search suggestions)
+✅ manifest.json (PWA manifest)
+✅ service-worker.js (service worker)
+
+✅ includes/ (auth, helpers)
+✅ api/ (API endpoints)
+✅ css/ (stylesheets)
+✅ js/ (JavaScript)
+✅ images/ (images)
+✅ uploads/ (user uploads)
+✅ db/ (database migrations)
+✅ admin/ (admin pages)
+
+NO MORE DUPLICATES!
+
+================================================================================

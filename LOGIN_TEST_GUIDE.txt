@@ -1,0 +1,296 @@
+================================================================================
+LOGIN SYSTEM - QUICK TEST GUIDE
+================================================================================
+
+TEST CREDENTIALS
+================================================================================
+
+Customer Account:
+  Email: customer@test.com
+  Password: TestPassword123
+  Expected Dashboard: customer.php
+
+Vendor Account:
+  Email: vendor@test.com
+  Password: TestPassword123
+  Expected Dashboard: vendor.php
+
+Admin Account:
+  Email: admin@test.com
+  Password: TestPassword123
+  Expected Dashboard: admin.php
+
+================================================================================
+QUICK TESTS (5 MINUTES)
+================================================================================
+
+TEST 1: Correct Login - Customer
+✓ Go to: http://localhost/sarap_local/login.php
+✓ Email: customer@test.com
+✓ Password: TestPassword123
+✓ Click: Log In
+✓ Expected: Redirect to customer.php immediately
+✓ Result: PASS / FAIL
+
+TEST 2: Correct Login - Vendor
+✓ Go to: http://localhost/sarap_local/login.php
+✓ Email: vendor@test.com
+✓ Password: TestPassword123
+✓ Click: Log In
+✓ Expected: Redirect to vendor.php immediately
+✓ Result: PASS / FAIL
+
+TEST 3: Incorrect Password
+✓ Go to: http://localhost/sarap_local/login.php
+✓ Email: customer@test.com
+✓ Password: WrongPassword123
+✓ Click: Log In
+✓ Expected: Error message "Invalid email or password."
+✓ Result: PASS / FAIL
+
+TEST 4: Empty Fields
+✓ Go to: http://localhost/sarap_local/login.php
+✓ Leave email and password empty
+✓ Click: Log In
+✓ Expected: Error message "Please complete all fields."
+✓ Result: PASS / FAIL
+
+TEST 5: Non-existent Email
+✓ Go to: http://localhost/sarap_local/login.php
+✓ Email: nonexistent@test.com
+✓ Password: TestPassword123
+✓ Click: Log In
+✓ Expected: Error message "Invalid email or password."
+✓ Result: PASS / FAIL
+
+TEST 6: Password Visibility Toggle
+✓ Go to: http://localhost/sarap_local/login.php
+✓ Enter password: TestPassword123
+✓ Click eye icon
+✓ Expected: Password becomes visible
+✓ Click eye icon again
+✓ Expected: Password becomes hidden
+✓ Result: PASS / FAIL
+
+TEST 7: Already Logged In
+✓ Login as customer successfully
+✓ Go to: http://localhost/sarap_local/login.php
+✓ Expected: Auto-redirect to customer.php
+✓ Result: PASS / FAIL
+
+TEST 8: Access Dashboard While Logged Out
+✓ Logout or clear session
+✓ Go to: http://localhost/sarap_local/customer.php
+✓ Expected: Redirect to login.php
+✓ Result: PASS / FAIL
+
+TEST 9: No CTRL + SHIFT + R Needed
+✓ Login with correct credentials
+✓ Should redirect immediately without hard refresh
+✓ Expected: Works without CTRL + SHIFT + R
+✓ Result: PASS / FAIL
+
+TEST 10: Cross-Role Prevention
+✓ Login as customer
+✓ Try to access: http://localhost/sarap_local/vendor.php
+✓ Expected: Redirect to login.php
+✓ Result: PASS / FAIL
+
+================================================================================
+DETAILED TEST FLOW
+================================================================================
+
+SCENARIO 1: First Time Login
+1. Clear browser cookies/cache
+2. Go to login.php
+3. Enter correct credentials
+4. Click Log In
+5. Verify redirect to correct dashboard
+6. Verify session variables are set
+7. Refresh page (F5)
+8. Verify dashboard still loads (no redirect to login)
+9. PASS if all steps work
+
+SCENARIO 2: Failed Login Attempts
+1. Go to login.php
+2. Enter wrong password 5 times
+3. Verify rate limiting message appears
+4. Wait 15 minutes (or check error message)
+5. Try again with correct password
+6. Verify login works after rate limit expires
+7. PASS if rate limiting works
+
+SCENARIO 3: Session Persistence
+1. Login successfully
+2. Close browser tab (not entire browser)
+3. Open new tab
+4. Go to dashboard URL
+5. Verify dashboard loads (session persists)
+6. PASS if session persists
+
+SCENARIO 4: Session Timeout
+1. Login successfully
+2. Wait 1 hour (or modify timeout for testing)
+3. Try to access dashboard
+4. Verify redirect to login.php
+5. PASS if timeout works
+
+SCENARIO 5: CSRF Protection
+1. Login successfully
+2. Inspect page source
+3. Verify CSRF token is present in form
+4. Try to submit form without token (manually)
+5. Verify request is rejected
+6. PASS if CSRF protection works
+
+================================================================================
+BROWSER CONSOLE CHECKS
+================================================================================
+
+Open DevTools (F12) and check:
+
+✓ No JavaScript errors
+✓ No 404 errors for assets
+✓ No console warnings
+✓ Network tab shows successful requests
+✓ No failed API calls
+✓ Session cookies present
+✓ Cache headers correct
+
+================================================================================
+DATABASE VERIFICATION
+================================================================================
+
+Check if test users exist:
+
+mysql -u root sarap_local
+
+SELECT id, email, role, password FROM users WHERE email IN ('customer@test.com', 'vendor@test.com', 'admin@test.com');
+
+Expected output:
+- 3 rows
+- Emails match
+- Roles are correct (customer, vendor, admin)
+- Passwords are hashed (bcrypt format)
+
+================================================================================
+SESSION VERIFICATION
+================================================================================
+
+Create a test file to verify session:
+
+File: session_test.php
+<?php
+session_start();
+echo '<pre>';
+echo 'Session ID: ' . session_id() . '<br>';
+echo 'Session Variables:<br>';
+print_r($_SESSION);
+echo '</pre>';
+?>
+
+After login, visit this file and verify:
+- Session ID is set
+- $_SESSION['user_id'] exists
+- $_SESSION['role'] exists
+- $_SESSION['authenticated'] = true
+- $_SESSION['email'] exists
+
+================================================================================
+COMMON ISSUES & SOLUTIONS
+================================================================================
+
+ISSUE 1: Still redirects back to login after login
+SOLUTION: 
+- Check if session_start() is at top of login.php
+- Check if $_SESSION['authenticated'] is being set
+- Check if redirectToDashboard() is being called
+- Verify database connection is working
+
+ISSUE 2: CTRL + SHIFT + R still needed
+SOLUTION:
+- Check cache headers in login.php
+- Verify no output before header() calls
+- Check browser cache settings
+- Try incognito mode
+
+ISSUE 3: Password toggle not working
+SOLUTION:
+- Check JavaScript is enabled
+- Check browser console for errors
+- Verify togglePasswordVisibility() function exists
+- Check HTML structure of password field
+
+ISSUE 4: Empty fields still redirect
+SOLUTION:
+- Check form validation in JavaScript
+- Check server-side validation in PHP
+- Verify error message is displayed
+- Check if form submission is being prevented
+
+ISSUE 5: Wrong dashboard after login
+SOLUTION:
+- Check $_SESSION['role'] is set correctly
+- Verify redirectToDashboard() function
+- Check database role values
+- Verify switch statement in redirectToDashboard()
+
+================================================================================
+PERFORMANCE CHECKS
+================================================================================
+
+✓ Login page loads in < 1 second
+✓ Dashboard loads in < 2 seconds
+✓ Redirect happens instantly (< 100ms)
+✓ No lag on password toggle
+✓ Form submission is responsive
+✓ No memory leaks
+✓ No CPU spikes
+
+================================================================================
+SECURITY CHECKS
+================================================================================
+
+✓ Password is never logged
+✓ Password is hashed with bcrypt
+✓ CSRF token is validated
+✓ SQL injection is prevented (prepared statements)
+✓ XSS is prevented (input sanitization)
+✓ Session is regenerated after login
+✓ Rate limiting prevents brute force
+✓ Cache headers prevent sensitive data caching
+✓ No hardcoded credentials visible
+✓ No debug output in production
+
+================================================================================
+FINAL CHECKLIST
+================================================================================
+
+Before considering login system complete:
+
+□ All 10 quick tests pass
+□ No errors in browser console
+□ No 404 errors
+□ Session variables are correct
+□ Database queries work
+□ Redirects work correctly
+□ Password toggle works
+□ Error messages display
+□ Rate limiting works
+□ CSRF protection works
+□ Cache headers are set
+□ Security features work
+□ Works on mobile
+□ Works on different browsers
+□ Performance is good
+□ No CTRL + SHIFT + R needed
+
+================================================================================
+RESULT
+================================================================================
+
+If all tests pass: ✅ LOGIN SYSTEM IS WORKING PERFECTLY
+
+If any test fails: ❌ Review the issue and solution above
+
+================================================================================
