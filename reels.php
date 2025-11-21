@@ -152,27 +152,54 @@ $customer_id = $_SESSION['user_id'];
             margin-bottom: 10px;
         }
 
-        .order-btn {
-            background: linear-gradient(135deg, #C46A2B, #E9C46A);
+        .foodie-btn {
+            background: linear-gradient(45deg, #FF512F, #DD2476);
             color: white;
             border: none;
-            padding: 10px 24px;
-            border-radius: 20px;
-            font-weight: 700;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 800;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 13px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 14px;
             white-space: nowrap;
-            box-shadow: 0 4px 12px rgba(196, 106, 43, 0.3);
+            box-shadow: 0 10px 20px rgba(221, 36, 118, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
         }
 
-        .order-btn:hover {
-            transform: scale(1.08);
-            box-shadow: 0 6px 16px rgba(196, 106, 43, 0.5);
+        .foodie-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
         }
 
-        .order-btn:active {
-            transform: scale(0.95);
+        .foodie-btn:hover::before {
+            left: 100%;
+        }
+
+        .foodie-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(221, 36, 118, 0.5);
+        }
+
+        .foodie-btn:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        .foodie-btn i {
+            font-size: 16px;
         }
 
         /* Order/Reservation Modal Styles */
@@ -435,13 +462,36 @@ $customer_id = $_SESSION['user_id'];
         }
 
         .reels-sidebar {
-            width: 0;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: auto;
             background: transparent;
-            display: none;
         }
 
         .sidebar-btn {
-            display: none;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .sidebar-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
         }
 
         .loading-spinner {
@@ -692,8 +742,8 @@ $customer_id = $_SESSION['user_id'];
                             <div class="reel-title">${reel.title || 'Untitled Reel'}</div>
                             ${reel.description ? `<div class="reel-description">${reel.description}</div>` : ''}
                             ${reel.product_name ? `<div class="reel-product"><i class="fas fa-box"></i> ${reel.product_name} - ₱${reel.price}</div>` : ''}
-                            <button class="order-btn" onclick="orderProduct(${reel.product_id})">
-                                <i class="fas fa-shopping-cart"></i> Order Now
+                            <button class="foodie-btn" onclick="orderProduct(${reel.product_id})">
+                                <i class="fas fa-utensils"></i> Foodie Order
                             </button>
                         </div>
                         <div class="reel-actions">
