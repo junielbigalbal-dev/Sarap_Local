@@ -21,6 +21,8 @@ $smtp_host = get_env_var('SMTP_HOST');
 $smtp_port = get_env_var('SMTP_PORT');
 $smtp_pass = get_env_var('SMTP_PASS');
 
+$smtp_pass = get_env_var('SMTP_PASS');
+
 echo "<h3>Configuration Check:</h3>";
 echo "<ul>";
 echo "<li><strong>SMTP Host:</strong> " . ($smtp_host ? $smtp_host : '<span style="color:red">NOT SET</span>') . "</li>";
@@ -28,6 +30,12 @@ echo "<li><strong>SMTP User:</strong> " . ($smtp_user ? $smtp_user : '<span styl
 echo "<li><strong>SMTP Port:</strong> " . ($smtp_port ? $smtp_port : '<span style="color:red">NOT SET</span>') . "</li>";
 echo "<li><strong>SMTP Pass:</strong> " . ($smtp_pass ? '********' : '<span style="color:red">NOT SET</span>') . "</li>";
 echo "</ul>";
+
+echo "<h3>Environment Dump (Keys Only):</h3>";
+echo "<pre>";
+print_r(array_keys($_ENV));
+print_r(array_keys($_SERVER));
+echo "</pre>";
 
 $mail = new PHPMailer(true);
 

@@ -19,3 +19,11 @@ envVars:
   - key: APP_ENV
     value: production
     scope: build,runtime
+  - key: SMTP_HOST
+    scope: build,runtime
+  - key: SMTP_USER
+    scope: build,runtime
+  - key: SMTP_PASS
+    scope: build,runtime
+  - key: SMTP_PORT
+    scope: build,runtime
