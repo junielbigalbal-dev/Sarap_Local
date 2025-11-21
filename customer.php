@@ -1,21 +1,8 @@
 <?php
-// CRITICAL: Start session FIRST before any other code
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// CRITICAL: Set cache headers BEFORE any output
-header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
-header('Pragma: no-cache');
-header('Expires: 0');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-header('ETag: ' . md5(time()));
-header('X-UA-Compatible: IE=edge');
-header('X-Content-Type-Options: nosniff');
-
+require_once __DIR__ . '/includes/cache-control.php';
 require_once 'db.php';
-require_once 'includes/session-manager.php';  // Load session manager FIRST
-require_once 'includes/auth.php';              // Then load auth
+require_once 'includes/session-manager.php';
+require_once 'includes/auth.php';
 require_once 'includes/navigation.php';
 
 // Initialize secure session
@@ -708,7 +695,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'remove_favorite') {
                     <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <?php foreach (array_slice($products, 0, 6) as $product): ?>
                             <?php if (!empty($product['latitude']) && !empty($product['longitude'])): ?>
-                                <div class="vendor-card bg-gray-50 rounded-lg p-4 border border-gray-200" data-lat="<?php echo $product['latitude']; ?>" data-lng="<?php echo $product['longitude']; ?>">
+                                <div class="vendor-card tasty-hover bg-gray-50 rounded-lg p-4 border border-gray-200" data-lat="<?php echo $product['latitude']; ?>" data-lng="<?php echo $product['longitude']; ?>">
                                     <div class="flex items-center space-x-3">
                                         <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
                                             <i class="fas fa-store text-orange-600"></i>

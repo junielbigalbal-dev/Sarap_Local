@@ -451,6 +451,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 alert('Please agree to the Terms of Service and Privacy Policy.');
                 return false;
             }
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Creating Account...';
+            submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
         });
     </script>
 </body>

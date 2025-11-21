@@ -1,19 +1,8 @@
 <?php
-// CRITICAL: Start session FIRST before any other code
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// CRITICAL: Set cache headers BEFORE any output
-header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
-header('Pragma: no-cache');
-header('Expires: 0');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-header('ETag: ' . md5(time()));
-
+require_once __DIR__ . '/includes/cache-control.php';
 require_once 'db.php';
-require_once 'includes/session-manager.php';  // Load session manager FIRST
-require_once 'includes/auth.php';              // Then load auth
+require_once 'includes/session-manager.php';
+require_once 'includes/auth.php';
 require_once 'includes/navigation.php';
 
 // Initialize secure session

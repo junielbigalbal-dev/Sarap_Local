@@ -396,7 +396,7 @@ function registerUser($conn, $username, $email, $password, $confirm_password, $r
         error_log('Registration Error: ' . $e->getMessage());
         return [
             'success' => false,
-            'errors' => ['An error occurred. Please try again.']
+            'errors' => ['An error occurred: ' . $e->getMessage()]
         ];
     }
 }

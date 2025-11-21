@@ -1270,3 +1270,69 @@ body {
     height: calc(var(--logo-size-mobile) - 8px) !important;
   }
 }
+/* ================================================
+   FOODIE ANIMATIONS & INTERACTIVITY
+   ================================================ */
+
+/* Floating Animation (for hero images, badges) */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Wiggle Animation (for icons, attention grabbers) */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+.animate-wiggle:hover {
+  animation: wiggle 0.5s ease-in-out infinite;
+}
+
+/* Pulse Ring (for primary buttons) */
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(196, 106, 43, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(196, 106, 43, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(196, 106, 43, 0); }
+}
+
+.btn-pulse:hover {
+  animation: pulse-ring 1.5s infinite;
+}
+
+/* Pop In (for cards on scroll) */
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.animate-pop-in {
+  opacity: 0; /* Hidden by default, JS will add 'visible' class */
+  animation-fill-mode: forwards;
+}
+
+.animate-pop-in.visible {
+  animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Tasty Hover Effect (Scale & Glow) */
+.tasty-hover {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tasty-hover:hover {
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 15px 30px rgba(196, 106, 43, 0.2);
+}
+
+/* Shimmer Effect (for skeletons or loading) */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}

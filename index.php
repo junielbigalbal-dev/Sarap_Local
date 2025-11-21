@@ -1,17 +1,4 @@
 <?php
-// Landing page for Sarap Local
-// Start session to track navigation
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Store current page in history for back button functionality
-require_once 'includes/navigation.php';
-storeCurrentPage('Landing Page');
-?><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Sarap Local - Your local food marketplace connecting food lovers with amazing local vendors. Fresh, authentic food delivered to your doorstep.">
     <meta name="keywords" content="local food, food delivery, fresh ingredients, community vendors, Sarap Local">
@@ -83,18 +70,18 @@ storeCurrentPage('Landing Page');
                     fresh cuisine delivered straight from your community to your table.
                 </p>
                 <div class="hero-actions">
-                    <a href="login.php" class="btn btn-primary btn-hero">
+                    <a href="login.php" class="btn btn-primary btn-hero btn-pulse">
                         <i class="fas fa-bowl-rice"></i>
                         <span>Order as customer</span>
                     </a>
-                    <a href="signup.php" class="btn btn-outline btn-hero">
+                    <a href="signup.php" class="btn btn-outline btn-hero tasty-hover">
                         <i class="fas fa-store"></i>
                         <span>Sell as vendor</span>
                     </a>
                 </div>
             </div>
             <div class="hero-visual">
-                <img src="images/S.png" alt="Sarap Local Logo" class="hero-logo-image" />
+                <img src="images/S.png" alt="Sarap Local Logo" class="hero-logo-image animate-float" />
             </div>
         </div>
     </section>
@@ -108,7 +95,7 @@ storeCurrentPage('Landing Page');
 
             <div class="features-grid">
                 <article class="feature-card">
-                    <div class="feature-icon">
+                    <div class="feature-icon animate-wiggle">
                         <i class="fas fa-utensils"></i>
                     </div>
                     <h3 class="feature-title">Curated local dishes</h3>
@@ -116,7 +103,7 @@ storeCurrentPage('Landing Page');
                 </article>
 
                 <article class="feature-card">
-                    <div class="feature-icon">
+                    <div class="feature-icon animate-wiggle">
                         <i class="fas fa-search"></i>
                     </div>
                     <h3 class="feature-title">Smart search & filters</h3>
@@ -124,7 +111,7 @@ storeCurrentPage('Landing Page');
                 </article>
 
                 <article class="feature-card">
-                    <div class="feature-icon">
+                    <div class="feature-icon animate-wiggle">
                         <i class="fas fa-heart"></i>
                     </div>
                     <h3 class="feature-title">Favorites & reviews</h3>
@@ -372,6 +359,31 @@ storeCurrentPage('Landing Page');
             });
         });
     }
+
+    // Scroll Animation Observer
+    document.addEventListener('DOMContentLoaded', function() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // Only animate once
+                }
+            });
+        }, observerOptions);
+
+        // Target elements to animate
+        const animatedElements = document.querySelectorAll('.feature-card, .step-card, .testimonial-card, .contact-item');
+        animatedElements.forEach((el, index) => {
+            el.classList.add('animate-pop-in');
+            el.style.animationDelay = `${index * 0.1}s`; // Stagger effect
+            observer.observe(el);
+        });
+    });
     </script>
 </body>
 </html>

@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y \
     git \
     && docker-php-ext-install mysqli pdo pdo_mysql \
     && docker-php-ext-enable mysqli \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default
 
 # Set working directory
 WORKDIR /var/www/html

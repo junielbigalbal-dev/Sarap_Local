@@ -1,18 +1,13 @@
 <?php
-// CRITICAL: Start session FIRST before any other code
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 require_once 'db.php';
-require_once 'includes/validators.php';        // Load validators for input sanitization
-require_once 'includes/session-manager.php';  // Load session manager FIRST
-require_once 'includes/auth.php';              // Then load auth (which may use session-manager)
+require_once 'includes/validators.php';
+require_once 'includes/session-manager.php';
+require_once 'includes/auth.php';
+require_once __DIR__ . '/includes/cache-control.php';
 
 // Initialize secure session
 initializeSecureSession();
-
-// If already logged in, redirect to dashboard
 if (isAlreadyAuthenticated()) {
     redirectToDashboard();
     exit();
@@ -262,6 +257,13 @@ $asset_version = time();
                 showValidationError('password', 'Password must be at least 6 characters');
                 return false;
             }
+
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Logging in...';
+            submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
 
             return true;
         });

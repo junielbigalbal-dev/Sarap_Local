@@ -1,8 +1,11 @@
 <?php
-include 'db.php';
-session_start();
 require_once __DIR__ . '/includes/cache-control.php';
-require_once __DIR__ . '/includes/auth.php';
+require_once 'db.php';
+require_once 'includes/session-manager.php';
+require_once 'includes/auth.php';
+
+// Initialize secure session
+initializeSecureSession();
 
 $asset_version = time();
 
