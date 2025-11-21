@@ -1,16 +1,4 @@
 <?php
-// CRITICAL: Start session FIRST before any other code
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-require_once 'db.php';
-require_once 'includes/validators.php';        // Load validators for input sanitization
-require_once 'includes/session-manager.php';  // Load session manager FIRST
-require_once 'includes/auth.php';              // Then load auth (which may use session-manager)
-
-// Initialize secure session
-initializeSecureSession();
 
 // If already logged in, redirect to dashboard
 if (isAlreadyAuthenticated()) {
