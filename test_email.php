@@ -50,6 +50,10 @@ try {
     $mail->Password   = $smtp_pass;
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port       = $smtp_port;
+    
+    // Timeout settings to prevent hanging
+    $mail->Timeout  = 10; // Timeout in seconds
+    $mail->Timelimit = 10;
 
     // Recipients
     $mail->setFrom(getenv('SMTP_USER'), 'Test Sender');
