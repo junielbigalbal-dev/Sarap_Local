@@ -29,12 +29,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Register user
         $registration_result = registerUser($conn, $username, $email, $password, $confirm_password, $role);
 
-        if ($registration_result['success']) {
             // Redirect to verification page
             $email_param = urlencode($registration_result['email']);
-            header("Location: verify.php?email=$email_param");
+            $redirect_url = "verify.php?email=$email_param";
+            
+            // If there's a specific message (like email failure), pass it
+            if (isset($registration_result['message']) && strpos($registration_result['message'], 'failed to send') !== false) {
+                $msg_param = urlencode($registration_result['message']);
+                $redirect_url .= "&error=$msg_param";
+            }
+            
+            header("Location: $redirect_url");
             exit();
-        } else {
             $errors = $registration_result['errors'];
         }
     }
