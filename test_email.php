@@ -9,31 +9,39 @@ echo "<h1>Email Debugger</h1>";
 echo "<p>Attempting to send email...</p>";
 
 // Debug: Check if env vars are loaded
-$smtp_user = getenv('SMTP_USER');
-$smtp_host = getenv('SMTP_HOST');
-$smtp_port = getenv('SMTP_PORT');
+function get_env_var($key) {
+    if (getenv($key) !== false) return getenv($key);
+    if (isset($_ENV[$key])) return $_ENV[$key];
+    if (isset($_SERVER[$key])) return $_SERVER[$key];
+    return false;
+}
+
+$smtp_user = get_env_var('SMTP_USER');
+$smtp_host = get_env_var('SMTP_HOST');
+$smtp_port = get_env_var('SMTP_PORT');
+$smtp_pass = get_env_var('SMTP_PASS');
 
 echo "<h3>Configuration Check:</h3>";
 echo "<ul>";
 echo "<li><strong>SMTP Host:</strong> " . ($smtp_host ? $smtp_host : '<span style="color:red">NOT SET</span>') . "</li>";
 echo "<li><strong>SMTP User:</strong> " . ($smtp_user ? $smtp_user : '<span style="color:red">NOT SET</span>') . "</li>";
 echo "<li><strong>SMTP Port:</strong> " . ($smtp_port ? $smtp_port : '<span style="color:red">NOT SET</span>') . "</li>";
-echo "<li><strong>SMTP Pass:</strong> " . (getenv('SMTP_PASS') ? '********' : '<span style="color:red">NOT SET</span>') . "</li>";
+echo "<li><strong>SMTP Pass:</strong> " . ($smtp_pass ? '********' : '<span style="color:red">NOT SET</span>') . "</li>";
 echo "</ul>";
 
 $mail = new PHPMailer(true);
 
 try {
     // Server settings
-    $mail->SMTPDebug = 2;                      // Enable verbose debug output
-    $mail->Debugoutput = 'html';               // Output in HTML format
-    $mail->isSMTP();                                            // Send using SMTP
-    $mail->Host       = getenv('SMTP_HOST');                    // Set the SMTP server to send through
-    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-    $mail->Username   = getenv('SMTP_USER');                    // SMTP username
-    $mail->Password   = getenv('SMTP_PASS');                    // SMTP password
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption
-    $mail->Port       = getenv('SMTP_PORT');                    // TCP port to connect to
+    $mail->SMTPDebug = 2;
+    $mail->Debugoutput = 'html';
+    $mail->isSMTP();
+    $mail->Host       = $smtp_host;
+    $mail->SMTPAuth   = true;
+    $mail->Username   = $smtp_user;
+    $mail->Password   = $smtp_pass;
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port       = $smtp_port;
 
     // Recipients
     $mail->setFrom(getenv('SMTP_USER'), 'Test Sender');

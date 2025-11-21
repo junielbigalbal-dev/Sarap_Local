@@ -27,6 +27,7 @@ RUN composer install --no-dev --optimize-autoloader
 # Copy configs
 COPY default.conf /etc/nginx/conf.d/default.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY zz-render.conf /usr/local/etc/php-fpm.d/zz-render.conf
 
 # Create necessary directories with proper permissions
 RUN mkdir -p /var/log/php-fpm /var/log/nginx \
