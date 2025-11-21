@@ -44,20 +44,21 @@ try {
     $mail->SMTPDebug = 2;
     $mail->Debugoutput = 'html';
     $mail->isSMTP();
-    $mail->Host       = $smtp_host;
+    
+    // Force Port 465 (SSL) for testing
+    $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
     $mail->Username   = $smtp_user;
     $mail->Password   = $smtp_pass;
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port       = $smtp_port;
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Use SSL
+    $mail->Port       = 465;
     
-    // Timeout settings to prevent hanging
-    $mail->Timeout  = 10; // Timeout in seconds
-    $mail->Timelimit = 10;
+    // Timeout settings
+    $mail->Timeout  = 10;
 
     // Recipients
-    $mail->setFrom(getenv('SMTP_USER'), 'Test Sender');
-    $mail->addAddress(getenv('SMTP_USER'));     // Add a recipient (sending to self)
+    $mail->setFrom($smtp_user, 'Test Sender');
+    $mail->addAddress($smtp_user);     // Add a recipient (sending to self)
 
     // Content
     $mail->isHTML(true);                                  // Set email format to HTML
