@@ -10,21 +10,30 @@ $db_config = [
     'user' => getenv('DB_USER') ?: 'root',
     'pass' => getenv('DB_PASSWORD') ?: getenv('DB_PASS') ?: '',
     'db'   => getenv('DB_NAME') ?: 'sarap_local',
+    'port' => getenv('DB_PORT') ? (int)getenv('DB_PORT') : 3306,
     'charset' => 'utf8mb4'
 ];
 
-// Create connection with error suppression to handle custom error
-$conn = @new mysqli(
+// Initialize mysqli object
+$conn = mysqli_init();
+
+// Set connection timeout BEFORE connecting (critical for preventing hangs)
+$conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5);
+
+// Establish connection
+// Suppress error to handle it manually
+$connected = @$conn->real_connect(
     $db_config['host'],
     $db_config['user'],
     $db_config['pass'],
-    $db_config['db']
+    $db_config['db'],
+    $db_config['port']
 );
 
 // Check connection
-if ($conn->connect_error) {
+if (!$connected) {
     // Log error for debugging
-    error_log('Database Connection Error: ' . $conn->connect_error);
+    error_log('Database Connection Error: ' . $conn->connect_error . ' (' . $conn->connect_errno . ')');
     
     // Show user-friendly error message
     if (php_sapi_name() !== 'cli') {
@@ -64,4 +73,4 @@ $conn->set_charset($db_config['charset']);
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 // Set connection timeout
-$conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5);
+
