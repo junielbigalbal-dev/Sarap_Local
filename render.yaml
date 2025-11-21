@@ -1,8 +1,21 @@
 type: web
 name: sarap-local
 env: docker
-plan: free
+plan: starter
 region: singapore
 repo: https://github.com/junielbigalbal-dev/Sarap_Local
 branch: main
 dockerfilePath: Dockerfile
+rootDir: .
+envVars:
+  - key: DB_HOST
+    scope: build,runtime
+  - key: DB_NAME
+    scope: build,runtime
+  - key: DB_USER
+    scope: build,runtime
+  - key: DB_PASSWORD
+    scope: build,runtime
+  - key: APP_ENV
+    value: production
+    scope: build,runtime

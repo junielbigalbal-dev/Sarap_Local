@@ -8,7 +8,7 @@
 $db_config = [
     'host' => getenv('DB_HOST') ?: 'localhost',
     'user' => getenv('DB_USER') ?: 'root',
-    'pass' => getenv('DB_PASS') ?: '',
+    'pass' => getenv('DB_PASSWORD') ?: getenv('DB_PASS') ?: '',
     'db'   => getenv('DB_NAME') ?: 'sarap_local',
     'charset' => 'utf8mb4'
 ];
