@@ -1,0 +1,3 @@
+﻿MySQL Version: 10.4.32-MariaDB
+Testing insert with unquoted 'role' column...
+Success: Unquoted 'role' works.

@@ -30,8 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $registration_result = registerUser($conn, $username, $email, $password, $confirm_password, $role);
 
         if ($registration_result['success']) {
-            // Redirect to login with success message
-            header('Location: login.php?registered=1');
+            // Redirect to verification page
+            $email_param = urlencode($registration_result['email']);
+            header("Location: verify.php?email=$email_param");
             exit();
         } else {
             $errors = $registration_result['errors'];

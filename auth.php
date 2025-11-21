@@ -281,6 +281,60 @@ function requireLogin($allowed_roles = []) {
 /**
  * Register new user
  */
+// Import PHPMailer classes into the global namespace
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+/**
+ * Send verification email
+ */
+function sendVerificationEmail($email, $code) {
+    $mail = new PHPMailer(true);
+
+    try {
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host       = getenv('SMTP_HOST');
+        $mail->SMTPAuth   = true;
+        $mail->Username   = getenv('SMTP_USER');
+        $mail->Password   = getenv('SMTP_PASS');
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = getenv('SMTP_PORT') ?: 587;
+
+        // Recipients
+        $mail->setFrom(getenv('SMTP_USER'), 'Sarap Local');
+        $mail->addAddress($email);
+
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = 'Verify your Sarap Local Account';
+        $mail->Body    = "
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #C46A2B;'>Welcome to Sarap Local!</h2>
+                <p>Please use the following code to verify your account:</p>
+                <div style='background-color: #f8f9fa; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; margin: 20px 0;'>
+                    {$code}
+                </div>
+                <p>This code will expire in 15 minutes.</p>
+                <p>If you didn't request this, please ignore this email.</p>
+            </div>
+        ";
+        $mail->AltBody = "Your verification code is: {$code}";
+
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+        return false;
+    }
+}
+
+/**
+ * Register new user
+ */
 function registerUser($conn, $username, $email, $password, $confirm_password, $role) {
     // Validate inputs
     $errors = [];
@@ -361,11 +415,15 @@ function registerUser($conn, $username, $email, $password, $confirm_password, $r
         }
         $stmt->close();
 
-        // Hash password using PASSWORD_DEFAULT (currently bcrypt, but future-proof)
+        // Hash password
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        // Insert user
-        $insert_query = "INSERT INTO users (`username`, `email`, `password`, `role`, `created_at`) VALUES (?, ?, ?, ?, NOW())";
+        // Generate verification code
+        $verification_code = sprintf("%06d", mt_rand(1, 999999));
+        $expires_at = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+
+        // Insert user with verification code
+        $insert_query = "INSERT INTO users (`username`, `email`, `password`, `role`, `created_at`, `verification_code`, `is_verified`, `verification_expires_at`) VALUES (?, ?, ?, ?, NOW(), ?, 0, ?)";
         $stmt = $conn->prepare($insert_query);
         
         if (!$stmt) {
@@ -375,7 +433,7 @@ function registerUser($conn, $username, $email, $password, $confirm_password, $r
             ];
         }
 
-        $stmt->bind_param("ssss", $username, $email, $hashed_password, $role);
+        $stmt->bind_param("ssssss", $username, $email, $hashed_password, $role, $verification_code, $expires_at);
         
         if (!$stmt->execute()) {
             $stmt->close();
@@ -387,10 +445,21 @@ function registerUser($conn, $username, $email, $password, $confirm_password, $r
 
         $stmt->close();
 
-        return [
-            'success' => true,
-            'message' => 'Registration successful! Please log in.'
-        ];
+        // Send verification email
+        if (sendVerificationEmail($email, $verification_code)) {
+            return [
+                'success' => true,
+                'message' => 'Registration successful! Please check your email for the verification code.',
+                'email' => $email // Return email for redirect
+            ];
+        } else {
+            // If email fails, we still register them but they might need to resend code
+            return [
+                'success' => true,
+                'message' => 'Registration successful, but failed to send verification email. Please try logging in to resend.',
+                'email' => $email
+            ];
+        }
 
     } catch (Exception $e) {
         error_log('Registration Error: ' . $e->getMessage());
@@ -398,5 +467,79 @@ function registerUser($conn, $username, $email, $password, $confirm_password, $r
             'success' => false,
             'errors' => ['An error occurred: ' . $e->getMessage()]
         ];
+    }
+}
+
+/**
+ * Verify account
+ */
+function verifyAccount($conn, $email, $code) {
+    try {
+        $query = "SELECT id, verification_code, verification_expires_at FROM users WHERE email = ? AND is_verified = 0";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows === 0) {
+            return ['success' => false, 'message' => 'Invalid email or account already verified.'];
+        }
+
+        $user = $result->fetch_assoc();
+
+        if ($user['verification_code'] !== $code) {
+            return ['success' => false, 'message' => 'Invalid verification code.'];
+        }
+
+        if (strtotime($user['verification_expires_at']) < time()) {
+            return ['success' => false, 'message' => 'Verification code has expired. Please request a new one.'];
+        }
+
+        // Mark as verified
+        $update_query = "UPDATE users SET is_verified = 1, verification_code = NULL, verification_expires_at = NULL WHERE id = ?";
+        $stmt = $conn->prepare($update_query);
+        $stmt->bind_param("i", $user['id']);
+        
+        if ($stmt->execute()) {
+            return ['success' => true, 'message' => 'Account verified successfully! You can now log in.'];
+        } else {
+            return ['success' => false, 'message' => 'Database error during verification.'];
+        }
+
+    } catch (Exception $e) {
+        return ['success' => false, 'message' => 'An error occurred.'];
+    }
+}
+
+/**
+ * Resend verification code
+ */
+function resendVerificationCode($conn, $email) {
+    try {
+        $query = "SELECT id FROM users WHERE email = ? AND is_verified = 0";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        
+        if ($stmt->get_result()->num_rows === 0) {
+            return ['success' => false, 'message' => 'Email not found or already verified.'];
+        }
+
+        $verification_code = sprintf("%06d", mt_rand(1, 999999));
+        $expires_at = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+
+        $update_query = "UPDATE users SET verification_code = ?, verification_expires_at = ? WHERE email = ?";
+        $stmt = $conn->prepare($update_query);
+        $stmt->bind_param("sss", $verification_code, $expires_at, $email);
+        $stmt->execute();
+
+        if (sendVerificationEmail($email, $verification_code)) {
+            return ['success' => true, 'message' => 'New verification code sent.'];
+        } else {
+            return ['success' => false, 'message' => 'Failed to send email. Please try again later.'];
+        }
+
+    } catch (Exception $e) {
+        return ['success' => false, 'message' => 'An error occurred.'];
     }
 }

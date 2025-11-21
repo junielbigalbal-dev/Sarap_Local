@@ -1,0 +1,4 @@
+﻿Testing user registration...
+Attempting to register: testuser_1763713780, test_1763713780@example.com, customer
+Registration SUCCESS!
+Test user deleted.

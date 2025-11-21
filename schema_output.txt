@@ -1,0 +1,38 @@
+﻿Connected successfully
+Schema for table 'users':
+Field               Type                Null      Key       Default             Extra               
+----------------------------------------------------------------------------------------------------
+id                  int(11)             NO        PRI       NULL                auto_increment      
+username            varchar(100)        NO        UNI       NULL                                    
+password            varchar(255)        NO                  NULL                                    
+role                enum('customer','vendor','admin')NO                  customer                                
+business_name       varchar(100)        YES                 NULL                                    
+business_banner     varchar(255)        YES                 NULL                                    
+business_logo       varchar(255)        YES                 NULL                                    
+opening_time        time                YES                 NULL                                    
+closing_time        time                YES                 NULL                                    
+is_open             tinyint(1)          NO                  1                                       
+delivery_radius_km  int(11)             YES                 NULL                                    
+business_address    text                YES                 NULL                                    
+contact_number      varchar(20)         YES                 NULL                                    
+business_descriptiontext                YES                 NULL                                    
+profile_image       varchar(255)        YES                 images/default_vendor.jpg                    
+is_approved         tinyint(1)          YES                 0                                       
+created_at          timestamp           NO                  current_timestamp()                     
+notify_comments     tinyint(1)          NO                  1                                       
+notify_replies      tinyint(1)          NO                  1                                       
+notify_orders       tinyint(1)          NO                  1                                       
+notify_promotions   tinyint(1)          NO                  1                                       
+notify_reviews      tinyint(1)          NO                  1                                       
+first_name          varchar(100)        YES                 NULL                                    
+last_name           varchar(100)        YES                 NULL                                    
+email               varchar(191)        YES       UNI       NULL                                    
+phone               varchar(30)         YES                 NULL                                    
+address             text                YES                 NULL                                    
+bio                 text                YES                 NULL                                    
+birthday            date                YES                 NULL                                    
+gender              varchar(20)         YES                 NULL                                    
+vendor_id_path      varchar(255)        YES                 NULL                                    
+latitude            decimal(10,8)       YES                 NULL                                    
+longitude           decimal(11,8)       YES                 NULL                                    
+last_login          timestamp           YES                 NULL                                    
