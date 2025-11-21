@@ -11,7 +11,12 @@ if (file_exists(__DIR__ . '/.env')) {
     foreach ($lines as $line) {
         if (strpos(trim($line), '#') === 0) continue;
         list($name, $value) = explode('=', $line, 2);
-        $env_vars[trim($name)] = trim($value);
+        $name = trim($name);
+        $value = trim($value);
+        $env_vars[$name] = $value;
+        putenv("$name=$value");
+        $_ENV[$name] = $value;
+        $_SERVER[$name] = $value;
     }
 }
 

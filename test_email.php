@@ -8,6 +8,19 @@ require 'db.php'; // To load env vars
 echo "<h1>Email Debugger</h1>";
 echo "<p>Attempting to send email...</p>";
 
+// Debug: Check if env vars are loaded
+$smtp_user = getenv('SMTP_USER');
+$smtp_host = getenv('SMTP_HOST');
+$smtp_port = getenv('SMTP_PORT');
+
+echo "<h3>Configuration Check:</h3>";
+echo "<ul>";
+echo "<li><strong>SMTP Host:</strong> " . ($smtp_host ? $smtp_host : '<span style="color:red">NOT SET</span>') . "</li>";
+echo "<li><strong>SMTP User:</strong> " . ($smtp_user ? $smtp_user : '<span style="color:red">NOT SET</span>') . "</li>";
+echo "<li><strong>SMTP Port:</strong> " . ($smtp_port ? $smtp_port : '<span style="color:red">NOT SET</span>') . "</li>";
+echo "<li><strong>SMTP Pass:</strong> " . (getenv('SMTP_PASS') ? '********' : '<span style="color:red">NOT SET</span>') . "</li>";
+echo "</ul>";
+
 $mail = new PHPMailer(true);
 
 try {
