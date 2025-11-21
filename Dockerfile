@@ -1,3 +1,5 @@
+FROM php:8.2-fpm
+
 WORKDIR /var/www/html
 
 # Copy project files to Nginx root
