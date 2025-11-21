@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libssl-dev ca-certificates \
-    && docker-php-ext-install mysqli pdo pdo_mysql openssl \
-    && docker-php-ext-enable mysqli openssl \
+    && docker-php-ext-install mysqli pdo pdo_mysql \
+    && docker-php-ext-enable mysqli \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default
 
