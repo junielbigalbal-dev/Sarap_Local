@@ -365,7 +365,7 @@ function registerUser($conn, $username, $email, $password, $confirm_password, $r
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         // Insert user
-        $insert_query = "INSERT INTO users (username, email, password, role, created_at) VALUES (?, ?, ?, ?, NOW())";
+        $insert_query = "INSERT INTO users (`username`, `email`, `password`, `role`, `created_at`) VALUES (?, ?, ?, ?, NOW())";
         $stmt = $conn->prepare($insert_query);
         
         if (!$stmt) {

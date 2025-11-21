@@ -4,13 +4,34 @@
  * Secure connection with proper error handling and configuration
  */
 
+// Load environment variables from .env file if it exists
+$env_vars = [];
+if (file_exists(__DIR__ . '/.env')) {
+    $lines = file(__DIR__ . '/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        list($name, $value) = explode('=', $line, 2);
+        $env_vars[trim($name)] = trim($value);
+    }
+}
+
+// Helper to get env var with priority: .env file -> getenv() -> default
+function get_config($key, $default = null) {
+    global $env_vars;
+    if (isset($env_vars[$key])) return $env_vars[$key];
+    $val = getenv($key);
+    return $val !== false ? $val : $default;
+}
+
 // Database configuration
 $db_config = [
-    'host' => getenv('DB_HOST') ?: 'localhost',
-    'user' => getenv('DB_USER') ?: 'root',
-    'pass' => getenv('DB_PASSWORD') ?: getenv('DB_PASS') ?: '',
-    'db'   => getenv('DB_NAME') ?: 'sarap_local',
-    'port' => getenv('DB_PORT') ? (int)getenv('DB_PORT') : 3306,
+    'host' => get_config('DB_HOST', 'localhost'),
+    'user' => get_config('DB_USER', 'root'),
+    'pass' => get_config('DB_PASSWORD', get_config('DB_PASS', '')),
+    'db'   => get_config('DB_NAME', 'sarap_local'),
+    'port' => (int)get_config('DB_PORT', 3306),
+    'charset' => 'utf8mb4'
+];
     'charset' => 'utf8mb4'
 ];
 
@@ -18,7 +39,7 @@ $db_config = [
 $conn = mysqli_init();
 
 // Set connection timeout BEFORE connecting (critical for preventing hangs)
-$conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 30);
+$conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5);
 
 // Establish connection
 // Suppress error to handle it manually
