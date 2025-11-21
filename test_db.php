@@ -23,6 +23,8 @@ echo "</ul>";
 
 echo "<h2>Connection Attempt</h2>";
 echo "<p>Attempting to connect with 5 second timeout...</p>";
+flush();
+ob_flush();
 
 $start_time = microtime(true);
 
