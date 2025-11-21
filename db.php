@@ -32,8 +32,7 @@ $db_config = [
     'port' => (int)get_config('DB_PORT', 3306),
     'charset' => 'utf8mb4'
 ];
-    'charset' => 'utf8mb4'
-];
+
 
 // Initialize mysqli object
 $conn = mysqli_init();
