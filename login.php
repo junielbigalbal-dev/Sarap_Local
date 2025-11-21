@@ -263,6 +263,13 @@ $asset_version = time();
                 return false;
             }
 
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Logging in...';
+            submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+
             return true;
         });
 

@@ -18,7 +18,7 @@ $db_config = [
 $conn = mysqli_init();
 
 // Set connection timeout BEFORE connecting (critical for preventing hangs)
-$conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5);
+$conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 30);
 
 // Establish connection
 // Suppress error to handle it manually
