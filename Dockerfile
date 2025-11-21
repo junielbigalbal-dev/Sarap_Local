@@ -6,16 +6,23 @@ RUN apt-get update && apt-get install -y \
     supervisor \
     curl \
     git \
+    unzip \
     && docker-php-ext-install mysqli pdo pdo_mysql \
     && docker-php-ext-enable mysqli \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
 
 # Copy project files to Nginx root
 COPY . .
+
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
 # Copy configs
 COPY default.conf /etc/nginx/conf.d/default.conf
