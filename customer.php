@@ -1482,11 +1482,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'remove_favorite') {
         }
 
         // Map Functions
-        let map = null;
-        let userMarker = null;
-        let vendorMarkers = [];
+        // (Variables map, userMarker, vendorMarkers already declared at top of script)
 
         function toggleMapView() {
+            
             const mapContainer = document.getElementById('mapContainer');
             const mapInfo = document.getElementById('mapInfo');
             const toggleText = document.getElementById('mapToggleText');
