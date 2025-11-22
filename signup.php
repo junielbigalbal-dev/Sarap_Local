@@ -48,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Register user
         $registration_result = registerUser($conn, $username, $email, $password, $confirm_password, $role);
 
+        if ($registration_result['success']) {
             // Redirect to verification page
             $email_param = urlencode($registration_result['email']);
             $redirect_url = "verify.php?email=$email_param";
@@ -129,51 +130,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .role-card {
             border: 2px solid #e5e7eb;
-            border-radius: 1rem;
+            border-radius: 12px;
             padding: 1.5rem;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+            transition: all 0.2s ease;
         }
 
         .role-card:hover {
             border-color: var(--primary-orange);
-            background-color: #fff7ed;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(255, 107, 53, 0.1);
+            background-color: rgba(255, 107, 53, 0.05);
         }
 
         .role-card.selected {
             border-color: var(--primary-orange);
-            background-color: #fff7ed;
-            box-shadow: 0 4px 6px -1px rgba(255, 107, 53, 0.1);
-        }
-
-        .role-card.selected::after {
-            content: '\f00c';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            color: var(--primary-orange);
-            font-size: 1.25rem;
+            background-color: rgba(255, 107, 53, 0.1);
         }
 
         .requirement {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             color: #6b7280;
             margin: 0.25rem 0;
-            transition: color 0.2s ease;
         }
 
         .requirement.met {
             color: #10b981;
-            font-weight: 600;
         }
 
         .requirement i {
@@ -182,42 +165,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 </head>
-<body class="min-h-screen bg-cream flex flex-col font-sans">
+<body class="min-h-screen bg-gray-50 flex flex-col">
     <!-- Header -->
-    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-40 border-b border-orange-100">
+    <header class="brand-header shadow-sm sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <a href="index.php" class="flex items-center group">
-                    <div class="w-10 h-10 mr-3 rounded-full bg-orange-50 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                        <i class="fas fa-utensils text-orange-500"></i>
+            <div class="flex justify-between items-center h-16">
+                <a href="index.php" class="flex items-center">
+                    <div class="w-9 h-9 mr-3 rounded-full bg-white/90 flex items-center justify-center shadow-sm">
+                        <img src="images/S.png" alt="Sarap Local" class="w-7 h-7 rounded-full">
                     </div>
                     <div class="flex flex-col leading-tight">
-                        <span class="text-xs uppercase tracking-[0.2em] text-orange-400 font-bold">Join us</span>
-                        <span class="text-2xl font-bold brand-script text-gray-900">Sarap Local</span>
+                        <span class="text-xs uppercase tracking-[0.2em] text-orange-100">Join us</span>
+                        <span class="text-xl font-semibold brand-script">Sarap Local</span>
                     </div>
                 </a>
-                <a href="login.php" class="hidden sm:inline-flex items-center text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">
-                    <span class="mr-3">Already have an account?</span>
-                    <span class="btn-primary btn-pill px-6 py-2 text-xs shadow-lg shadow-orange-100">Log In</span>
+                <a href="login.php" class="hidden sm:inline-flex items-center text-sm font-medium text-white hover:text-orange-100 transition-colors">
+                    <span class="mr-2">Already have an account?</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-white/20">Log in</span>
                 </a>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 flex items-center justify-center px-4 py-12">
-        <section class="w-full max-w-2xl animate-popIn">
-            <div class="mb-10 text-center">
-                <h2 class="text-4xl font-bold font-heading text-gray-900 mb-3">Create Your Account</h2>
-                <p class="text-gray-500 text-lg">Join Sarap Local and start your food journey today.</p>
+    <main class="flex-1 flex items-center justify-center px-4 py-10">
+        <section class="w-full max-w-2xl">
+            <div class="mb-8 text-center">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Create Your Account</h2>
+                <p class="text-gray-600">Join Sarap Local and start your food journey today.</p>
             </div>
 
-            <div class="content-card p-8 sm:p-10">
+            <div class="brand-card rounded-2xl shadow-xl border border-orange-100/40 p-6 sm:p-8">
                 <?php if (!empty($errors)): ?>
-                    <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-8">
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
                         <div class="flex items-start gap-3">
                             <i class="fas fa-exclamation-circle flex-shrink-0 mt-0.5"></i>
-                            <div class="text-sm">
+                            <div>
                                 <?php foreach ($errors as $error): ?>
                                     <p class="mb-1"><?php echo htmlspecialchars($error); ?></p>
                                 <?php endforeach; ?>
@@ -231,21 +214,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
 
                     <!-- Role Selection -->
-                    <div class="mb-10">
-                        <label class="block text-sm font-bold text-gray-700 mb-4">
-                            I want to...
+                    <div class="mb-8">
+                        <label class="block text-sm font-medium text-gray-700 mb-4">
+                            <i class="fas fa-user-check mr-2 text-orange-500"></i>I want to
                         </label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <!-- Customer Role -->
                             <label class="role-card <?php echo $selected_role === 'customer' ? 'selected' : ''; ?>">
                                 <input type="radio" name="role" value="customer" <?php echo $selected_role === 'customer' ? 'checked' : ''; ?> required class="hidden" onchange="updateRoleSelection()">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0 text-blue-500">
-                                        <i class="fas fa-shopping-bag text-xl"></i>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-shopping-bag text-blue-600 text-lg"></i>
                                     </div>
                                     <div>
-                                        <h3 class="font-bold text-gray-900">Order Food</h3>
-                                        <p class="text-xs text-gray-500 mt-1">Browse and order from vendors</p>
+                                        <h3 class="font-semibold text-gray-800">Order Food</h3>
+                                        <p class="text-sm text-gray-600">Browse and order from vendors</p>
                                     </div>
                                 </div>
                             </label>
@@ -253,13 +236,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <!-- Vendor Role -->
                             <label class="role-card <?php echo $selected_role === 'vendor' ? 'selected' : ''; ?>">
                                 <input type="radio" name="role" value="vendor" <?php echo $selected_role === 'vendor' ? 'checked' : ''; ?> required class="hidden" onchange="updateRoleSelection()">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center flex-shrink-0 text-green-500">
-                                        <i class="fas fa-store text-xl"></i>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-store text-green-600 text-lg"></i>
                                     </div>
                                     <div>
-                                        <h3 class="font-bold text-gray-900">Sell Food</h3>
-                                        <p class="text-xs text-gray-500 mt-1">Become a vendor and sell your food</p>
+                                        <h3 class="font-semibold text-gray-800">Sell Food</h3>
+                                        <p class="text-sm text-gray-600">Become a vendor and sell your food</p>
                                     </div>
                                 </div>
                             </label>
@@ -268,64 +251,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <!-- Username Field -->
                     <div class="mb-6">
-                        <label for="username" class="block text-sm font-bold text-gray-700 mb-2">
-                            Username
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-user mr-2 text-orange-500"></i>Username
                         </label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-user text-gray-400"></i>
-                            </div>
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                class="form-control pl-10"
-                                placeholder="Choose a unique username"
-                                value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>"
-                                pattern="[a-zA-Z0-9_]{3,20}"
-                                title="3-20 characters, alphanumeric and underscore only"
-                                required
-                            >
-                        </div>
-                        <p class="text-xs text-gray-400 mt-2 ml-1">3-20 characters, letters, numbers, and underscore only</p>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                            placeholder="Choose a unique username"
+                            value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>"
+                            pattern="[a-zA-Z0-9_]{3,20}"
+                            title="3-20 characters, alphanumeric and underscore only"
+                            required
+                        >
+                        <p class="text-xs text-gray-500 mt-1">3-20 characters, letters, numbers, and underscore only</p>
                     </div>
 
                     <!-- Email Field -->
                     <div class="mb-6">
-                        <label for="email" class="block text-sm font-bold text-gray-700 mb-2">
-                            Email Address
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-envelope mr-2 text-orange-500"></i>Email Address
                         </label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-envelope text-gray-400"></i>
-                            </div>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                class="form-control pl-10"
-                                placeholder="your@email.com"
-                                value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"
-                                required
-                                autocomplete="email"
-                            >
-                        </div>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                            placeholder="your@email.com"
+                            value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"
+                            required
+                            autocomplete="email"
+                        >
                     </div>
 
                     <!-- Password Field -->
                     <div class="mb-6">
-                        <label for="password" class="block text-sm font-bold text-gray-700 mb-2">
-                            Password
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-2 text-orange-500"></i>Password
                         </label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-gray-400"></i>
-                            </div>
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
-                                class="form-control pl-10 pr-10"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all pr-10"
                                 placeholder="••••••••"
                                 required
                                 onchange="checkPasswordStrength()"
@@ -333,70 +303,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             >
                             <button
                                 type="button"
-                                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500 transition-colors"
+                                class="absolute right-3 top-1/2 transform -translate-y-1/2 password-toggle"
                                 onclick="togglePasswordVisibility('password')"
                                 title="Show/Hide Password"
                             >
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
-                        <div class="password-strength bg-gray-100 overflow-hidden" id="passwordStrength"></div>
-                        <div class="mt-3 grid grid-cols-2 gap-2">
+                        <div class="password-strength" id="passwordStrength"></div>
+                        <div class="mt-3 text-sm">
                             <div class="requirement" id="req-length">
-                                <i class="fas fa-circle text-[6px]"></i>
-                                <span>8+ characters</span>
+                                <i class="fas fa-times"></i>
+                                <span>At least 8 characters</span>
                             </div>
                             <div class="requirement" id="req-upper">
-                                <i class="fas fa-circle text-[6px]"></i>
-                                <span>Uppercase letter</span>
+                                <i class="fas fa-times"></i>
+                                <span>One uppercase letter</span>
                             </div>
                             <div class="requirement" id="req-lower">
-                                <i class="fas fa-circle text-[6px]"></i>
-                                <span>Lowercase letter</span>
+                                <i class="fas fa-times"></i>
+                                <span>One lowercase letter</span>
                             </div>
                             <div class="requirement" id="req-number">
-                                <i class="fas fa-circle text-[6px]"></i>
-                                <span>Number</span>
+                                <i class="fas fa-times"></i>
+                                <span>One number</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Confirm Password Field -->
-                    <div class="mb-8">
-                        <label for="confirm_password" class="block text-sm font-bold text-gray-700 mb-2">
-                            Confirm Password
+                    <div class="mb-6">
+                        <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-check-circle mr-2 text-orange-500"></i>Confirm Password
                         </label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-check-circle text-gray-400"></i>
-                            </div>
                             <input
                                 type="password"
                                 id="confirm_password"
                                 name="confirm_password"
-                                class="form-control pl-10 pr-10"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all pr-10"
                                 placeholder="••••••••"
                                 required
                                 oninput="checkPasswordMatch()"
                             >
                             <button
                                 type="button"
-                                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500 transition-colors"
+                                class="absolute right-3 top-1/2 transform -translate-y-1/2 password-toggle"
                                 onclick="togglePasswordVisibility('confirm_password')"
                                 title="Show/Hide Password"
                             >
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
-                        <p class="text-xs mt-2 font-medium ml-1" id="passwordMatch"></p>
+                        <p class="text-xs text-gray-500 mt-1" id="passwordMatch"></p>
                     </div>
 
                     <!-- Terms & Conditions -->
-                    <div class="mb-8">
-                        <label class="flex items-start gap-3 text-sm text-gray-600 cursor-pointer">
+                    <div class="mb-6">
+                        <label class="flex items-start gap-3 text-sm text-gray-700">
                             <input type="checkbox" name="terms" required class="mt-1 w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500">
                             <span>
-                                I agree to the <a href="#" class="text-orange-600 hover:text-orange-700 font-bold">Terms of Service</a> and <a href="#" class="text-orange-600 hover:text-orange-700 font-bold">Privacy Policy</a>
+                                I agree to the <a href="#" class="text-orange-600 hover:text-orange-700 font-medium">Terms of Service</a> and <a href="#" class="text-orange-600 hover:text-orange-700 font-medium">Privacy Policy</a>
                             </span>
                         </label>
                     </div>
@@ -404,17 +371,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Submit Button -->
                     <button
                         type="submit"
-                        class="btn-primary btn-pill w-full shadow-lg shadow-orange-200 flex items-center justify-center gap-2 group"
+                        class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                     >
-                        <span>Create Account</span>
-                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        <i class="fas fa-user-plus"></i>
+                        Create Account
                     </button>
                 </form>
             </div>
 
-            <div class="text-center mt-8 text-sm text-gray-600">
+            <div class="text-center mt-6 text-sm text-gray-600">
                 <span>Already have an account? </span>
-                <a href="login.php" class="text-orange-600 hover:text-orange-700 font-bold transition-colors">
+                <a href="login.php" class="text-orange-600 hover:text-orange-700 font-medium transition-colors">
                     Log in here
                 </a>
             </div>
@@ -426,10 +393,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.querySelectorAll('.role-card').forEach(card => {
                 card.classList.remove('selected');
             });
-            const checked = document.querySelector('input[name="role"]:checked');
-            if (checked) {
-                checked.closest('.role-card').classList.add('selected');
-            }
+            document.querySelector('input[name="role"]:checked').closest('.role-card').classList.add('selected');
         }
 
         function togglePasswordVisibility(fieldId) {
@@ -483,16 +447,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         function updateRequirement(id, met) {
             const element = document.getElementById(id);
-            const icon = element.querySelector('i');
-            
             if (met) {
                 element.classList.add('met');
-                icon.classList.remove('fa-circle', 'text-[6px]');
-                icon.classList.add('fa-check', 'text-xs');
+                element.querySelector('i').classList.remove('fa-times');
+                element.querySelector('i').classList.add('fa-check');
             } else {
                 element.classList.remove('met');
-                icon.classList.remove('fa-check', 'text-xs');
-                icon.classList.add('fa-circle', 'text-[6px]');
+                element.querySelector('i').classList.remove('fa-check');
+                element.querySelector('i').classList.add('fa-times');
             }
         }
 
@@ -508,10 +470,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (password === confirmPassword) {
                 matchElement.textContent = '✓ Passwords match';
-                matchElement.className = 'text-xs text-green-600 mt-1 font-bold';
+                matchElement.className = 'text-xs text-green-600 mt-1';
             } else {
                 matchElement.textContent = '✗ Passwords do not match';
-                matchElement.className = 'text-xs text-red-600 mt-1 font-bold';
+                matchElement.className = 'text-xs text-red-600 mt-1';
             }
         }
 
@@ -527,10 +489,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (!role) {
                 e.preventDefault();
-                // Shake animation for role cards
-                const roleCards = document.querySelector('.grid');
-                roleCards.classList.add('animate-shake');
-                setTimeout(() => roleCards.classList.remove('animate-shake'), 500);
+                alert('Please select a role.');
                 return false;
             }
 
