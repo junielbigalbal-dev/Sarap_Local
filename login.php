@@ -103,61 +103,61 @@ $asset_version = time();
         }
     </style>
 </head>
-<body class="min-h-screen bg-gray-50 flex flex-col">
+<body class="min-h-screen bg-cream flex flex-col font-sans">
 
     <!-- Main Content -->
     <main class="flex-1 flex items-center justify-center px-4 sm:px-6 py-10">
         <section class="w-full max-w-6xl grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center">
             <!-- Left Marketing Panel -->
-            <div class="hidden lg:flex flex-col space-y-6">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
+            <div class="hidden lg:flex flex-col space-y-8 animate-slideInLeft">
+                <h2 class="text-4xl md:text-5xl font-bold font-heading text-gray-900 leading-tight">
                     Delicious local food,
                     <br>
-                    <span class="brand-script text-4xl md:text-5xl text-orange-600">made with love.</span>
+                    <span class="brand-script text-5xl md:text-6xl text-gradient">made with love.</span>
                 </h2>
-                <p class="text-gray-700 text-sm md:text-base max-w-md">
+                <p class="text-gray-600 text-lg max-w-md leading-relaxed">
                     Order from trusted neighborhood vendors and discover new favorites in a warm, curated marketplace made for local food lovers.
                 </p>
-                <ul class="space-y-3 text-sm text-gray-700">
-                    <li class="flex items-center">
-                        <span class="mr-3 inline-flex items-center justify-center h-7 w-7 rounded-full bg-orange-100 text-orange-600">
-                            <i class="fas fa-bowl-rice text-xs"></i>
+                <ul class="space-y-4 text-base text-gray-700">
+                    <li class="flex items-center group">
+                        <span class="mr-4 inline-flex items-center justify-center h-10 w-10 rounded-full bg-orange-100 text-orange-600 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-bowl-rice"></i>
                         </span>
-                        <span>Authentic home-cooked meals from local kitchens.</span>
+                        <span class="font-medium">Authentic home-cooked meals from local kitchens.</span>
                     </li>
-                    <li class="flex items-center">
-                        <span class="mr-3 inline-flex items-center justify-center h-7 w-7 rounded-full bg-green-100 text-green-600">
-                            <i class="fas fa-leaf text-xs"></i>
+                    <li class="flex items-center group">
+                        <span class="mr-4 inline-flex items-center justify-center h-10 w-10 rounded-full bg-green-100 text-green-600 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-leaf"></i>
                         </span>
-                        <span>Fresh ingredients with transparent vendor ratings.</span>
+                        <span class="font-medium">Fresh ingredients with transparent vendor ratings.</span>
                     </li>
-                    <li class="flex items-center">
-                        <span class="mr-3 inline-flex items-center justify-center h-7 w-7 rounded-full bg-blue-100 text-blue-600">
-                            <i class="fas fa-truck text-xs"></i>
+                    <li class="flex items-center group">
+                        <span class="mr-4 inline-flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 text-blue-600 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-truck"></i>
                         </span>
-                        <span>Track every order from kitchen to doorstep.</span>
+                        <span class="font-medium">Track every order from kitchen to doorstep.</span>
                     </li>
                 </ul>
             </div>
 
             <!-- Login Form -->
-            <div class="w-full max-w-md mx-auto">
+            <div class="w-full max-w-md mx-auto animate-popIn">
                 <section class="mb-8">
-                    <div class="mb-6 text-center lg:text-left">
-                        <h2 class="text-2xl font-bold text-gray-900">Log in to Sarap Local</h2>
-                        <p class="text-gray-600 text-sm mt-1">Access your account to order or sell food.</p>
+                    <div class="mb-8 text-center lg:text-left">
+                        <h2 class="text-3xl font-bold font-heading text-gray-900">Welcome Back!</h2>
+                        <p class="text-gray-500 mt-2">Log in to continue your food journey.</p>
                     </div>
 
-                    <div class="brand-card rounded-2xl shadow-xl border border-orange-100/40 p-6 sm:p-8">
+                    <div class="content-card p-8 sm:p-10">
                         <?php if (!empty($error_message)): ?>
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-start gap-3">
+                            <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 flex items-start gap-3 text-sm">
                                 <i class="fas fa-exclamation-circle flex-shrink-0 mt-0.5"></i>
                                 <span><?php echo htmlspecialchars($error_message); ?></span>
                             </div>
                         <?php endif; ?>
 
                         <?php if (!empty($success_message)): ?>
-                            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-start gap-3">
+                            <div class="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl mb-6 flex items-start gap-3 text-sm">
                                 <i class="fas fa-check-circle flex-shrink-0 mt-0.5"></i>
                                 <span><?php echo htmlspecialchars($success_message); ?></span>
                             </div>
@@ -169,39 +169,47 @@ $asset_version = time();
 
                             <!-- Email Field -->
                             <div class="mb-6">
-                                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                                    <i class="fas fa-envelope mr-2 text-orange-500"></i>Email Address
+                                <label for="email" class="block text-sm font-bold text-gray-700 mb-2">
+                                    Email Address
                                 </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                                    placeholder="your@email.com"
-                                    value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"
-                                    required
-                                    autocomplete="email"
-                                >
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-envelope text-gray-400"></i>
+                                    </div>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        class="form-control pl-10"
+                                        placeholder="your@email.com"
+                                        value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"
+                                        required
+                                        autocomplete="email"
+                                    >
+                                </div>
                             </div>
 
                             <!-- Password Field -->
                             <div class="mb-6">
-                                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                                    <i class="fas fa-lock mr-2 text-orange-500"></i>Password
+                                <label for="password" class="block text-sm font-bold text-gray-700 mb-2">
+                                    Password
                                 </label>
                                 <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-lock text-gray-400"></i>
+                                    </div>
                                     <input
                                         type="password"
                                         id="password"
                                         name="password"
-                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all pr-10"
+                                        class="form-control pl-10 pr-10"
                                         placeholder="••••••••"
                                         required
                                         autocomplete="current-password"
                                     >
                                     <button
                                         type="button"
-                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 password-toggle"
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500 transition-colors"
                                         onclick="togglePasswordVisibility()"
                                         title="Show/Hide Password"
                                     >
@@ -211,27 +219,28 @@ $asset_version = time();
                             </div>
 
                             <!-- Remember Me -->
-                            <div class="mb-6">
-                                <label class="flex items-center text-gray-700 text-sm">
-                                    <input type="checkbox" name="remember" class="mr-2 w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500" aria-label="Remember me">
+                            <div class="mb-8 flex items-center justify-between">
+                                <label class="flex items-center text-gray-600 text-sm cursor-pointer">
+                                    <input type="checkbox" name="remember" class="mr-2 w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500">
                                     <span>Remember me</span>
                                 </label>
+                                <a href="#" class="text-sm font-bold text-orange-600 hover:text-orange-700">Forgot Password?</a>
                             </div>
 
                             <!-- Login Button -->
                             <button
                                 type="submit"
-                                class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                                class="btn-primary btn-pill w-full shadow-lg shadow-orange-200 flex items-center justify-center gap-2 group"
                             >
-                                <i class="fas fa-sign-in-alt"></i>
-                                Log In
+                                <span>Log In</span>
+                                <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                             </button>
                         </form>
                     </div>
 
-                    <div class="text-center mt-6 text-sm text-gray-600">
+                    <div class="text-center mt-8 text-sm text-gray-600">
                         <span>Don't have an account? </span>
-                        <a href="signup.php" class="text-orange-600 hover:text-orange-700 font-medium transition-colors">
+                        <a href="signup.php" class="text-orange-600 hover:text-orange-700 font-bold transition-colors">
                             Create one now
                         </a>
                     </div>
@@ -310,7 +319,7 @@ $asset_version = time();
             
             // Add error message
             const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-message text-red-600 text-sm mt-2 flex items-center gap-1';
+            errorDiv.className = 'error-message text-red-500 text-xs mt-1 font-medium flex items-center gap-1 animate-shake';
             errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i>' + message;
             parent.appendChild(errorDiv);
             

@@ -274,247 +274,135 @@ if (isset($_POST['action']) && $_POST['action'] === 'remove_favorite') {
           echo '<script>document.addEventListener("DOMContentLoaded", function(){ if (typeof initLeaflet === "function") initLeaflet(); });</script>';
       }
     ?>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>">
     <style>
-        body {
-            background-color: #f8fafc;
-        }
-
-        .content-card {
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
-            overflow: hidden;
-        }
-
-        .btn-orange {
-            background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-dark));
-            color: white;
-            border: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            min-height: 44px; /* Touch-friendly size */
-        }
-
-        .btn-orange:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Enhanced mobile responsiveness for buttons */
-        @media (max-width: 640px) {
-            .btn-orange {
-                padding: 0.75rem 1rem;
-                font-size: 0.9rem;
-                min-height: 48px; /* Larger touch targets on mobile */
-            }
-
-            .btn-orange i {
-                font-size: 1rem;
-            }
-
-            /* Ensure buttons in cards have proper touch targets */
-            .product-card button {
-                min-height: 44px;
-                padding: 0.75rem 1rem;
-            }
-        }
-
-        .form-control {
-            background-color: #ffffff;
-            border-color: #e2e8f0;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-orange);
-        }
-
-        .search-input:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px var(--primary-orange);
-        }
-
-        .product-card {
-            transition: all 0.3s ease;
-        }
-
-        .product-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        /* Enhanced responsive button styling for customer page */
-        .btn-responsive {
-            @apply px-4 py-2 text-sm font-medium rounded-lg transition-colors min-h-[44px];
-        }
-
-        /* Mobile-first responsive button adjustments */
-        @media (max-width: 640px) {
-            .btn-responsive {
-                @apply px-3 py-2 text-xs min-h-[48px] min-w-[48px];
-            }
-
-            /* Ensure buttons in cards have proper touch targets */
-            .product-card button {
-                @apply min-h-[44px] px-3 py-2 text-sm;
-            }
-
-            /* Header buttons on mobile */
-            .flex.items-center.space-x-4 button {
-                @apply min-h-[40px] px-2 py-1 text-xs;
-            }
-        }
-    </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-    <!-- Header -->
-    <header class="brand-header shadow-sm sticky top-0 z-50">
+<body class="min-h-screen bg-cream font-sans text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="dashboard-header fixed w-full z-50 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
+            <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
-                <a href="index.php" class="flex items-center">
-                    <div class="w-9 h-9 mr-3 rounded-full bg-white/90 flex items-center justify-center shadow-sm">
-                        <img src="images/S.png" alt="Sarap Local" class="w-7 h-7 rounded-full">
+                <div class="flex items-center gap-4">
+                    <a href="index.php" class="flex items-center gap-3 group">
+                        <div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-utensils text-orange-500 text-lg"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xs uppercase tracking-widest text-orange-500 font-bold">Sarap Local</span>
+                            <span class="text-xl font-bold brand-script text-gray-900 leading-none">Dashboard</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-600 hover:text-orange-500 font-medium transition-colors">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <a href="#products" class="text-gray-600 hover:text-orange-500 font-medium transition-colors">
+                        <i class="fas fa-utensils mr-2"></i>Food
+                    </a>
+                    <a href="#orders" class="text-gray-600 hover:text-orange-500 font-medium transition-colors">
+                        <i class="fas fa-receipt mr-2"></i>Orders
+                    </a>
+                </div>
+
+                <!-- User Menu -->
+                <div class="flex items-center gap-4">
+                    <!-- Cart Badge (Mobile) -->
+                    <button onclick="toggleCart()" class="md:hidden relative p-2 text-gray-600 hover:text-orange-500 transition-colors">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="mobileCartCount" class="absolute top-0 right-0 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center transform scale-0 transition-transform duration-300">0</span>
+                    </button>
+
+                    <!-- User Profile -->
+                    <div class="relative" id="userMenu">
+                        <button onclick="toggleUserMenu()" class="flex items-center gap-3 hover:bg-orange-50 px-3 py-2 rounded-full transition-colors">
+                            <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-lg shadow-sm">
+                                <?php echo strtoupper(substr($_SESSION['username'], 0, 1)); ?>
+                            </div>
+                            <div class="hidden md:block text-left">
+                                <p class="text-sm font-bold text-gray-900"><?php echo htmlspecialchars($_SESSION['username']); ?></p>
+                                <p class="text-xs text-gray-500">Customer</p>
+                            </div>
+                            <i class="fas fa-chevron-down text-gray-400 text-xs ml-1 hidden md:block"></i>
+                        </button>
+
+                        <!-- Dropdown -->
+                        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 border border-gray-100 transform origin-top-right transition-all duration-200 z-50">
+                            <a href="profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600">
+                                <i class="fas fa-user-circle mr-2"></i>Profile
+                            </a>
+                            <a href="orders.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600">
+                                <i class="fas fa-receipt mr-2"></i>My Orders
+                            </a>
+                            <div class="border-t border-gray-100 my-1"></div>
+                            <a href="logout.php" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Log Out
+                            </a>
+                        </div>
                     </div>
-                    <div class="flex flex-col leading-tight">
-                        <span class="text-xs uppercase tracking-[0.2em] text-orange-100">Customer</span>
-                        <span class="text-xl font-semibold brand-script">Sarap Local</span>
-                    </div>
-                </a>
-
-                <!-- User Actions -->
-                <div class="flex items-center space-x-2 sm:space-x-4">
-                    <!-- Search -->
-                    <a href="search.php" class="relative text-white hover:text-orange-100 transition-colors p-1" title="Search">
-                        <i class="fas fa-search text-lg sm:text-xl"></i>
-                    </a>
-
-                    <!-- Profile (Direct Link) -->
-                    <a href="profile.php" class="relative text-white hover:text-orange-100 transition-colors p-1">
-                        <i class="fas fa-user-circle text-lg sm:text-xl"></i>
-                    </a>
-                    <!-- Cart -->
-                    <a href="#cart" class="relative text-white hover:text-orange-100 transition-colors p-1">
-                        <i class="fas fa-shopping-cart text-lg sm:text-xl"></i>
-                        <span id="cartBadge" class="cart-count absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-orange-500 text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center hidden">0</span>
-                    </a>
-
-                    <!-- Reels -->
-                    <a href="reels.php" class="relative text-white hover:text-orange-100 transition-colors p-1" title="Food Reels">
-                        <i class="fas fa-film text-lg sm:text-xl"></i>
-                    </a>
-
-                    <!-- Favorites -->
-                    <a href="#favorites" class="relative text-white hover:text-orange-100 transition-colors p-1">
-                        <i class="fas fa-heart text-lg sm:text-xl"></i>
-                        <?php if (count($favorites) > 0): ?>
-                            <span class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-orange-500 text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center">
-                                <?php echo count($favorites); ?>
-                            </span>
-                        <?php endif; ?>
-                    </a>
-
-                    <!-- Messages -->
-                    <a href="chat.php" class="relative text-white hover:text-orange-100 transition-colors p-1">
-                        <i class="fas fa-comments text-lg sm:text-xl"></i>
-                        <span id="messageBadge" class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center hidden">0</span>
-                    </a>
                 </div>
             </div>
         </div>
-    </header>
+    </nav>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-        <?php if (isset($error_message)): ?>
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6" role="alert">
-                <span class="block sm:inline"><?php echo htmlspecialchars($error_message); ?></span>
-            </div>
-        <?php endif; ?>
-
-        <!-- Smart Food Finder Section -->
-        <section class="mb-8">
-            <div class="brand-card rounded-xl shadow-sm p-6 mb-6">
-                <div class="flex flex-col lg:flex-row gap-4">
-                    <!-- Location Button -->
-                    <div class="flex gap-2">
-                        <button onclick="getCurrentLocation()" class="btn-orange px-4 py-3 rounded-lg" id="locationBtn">
-                            <i class="fas fa-map-marker-alt mr-2"></i>
-                            <span id="locationText">Use My Location</span>
-                        </button>
-                        <button onclick="toggleFilters()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-lg">
-                            <i class="fas fa-filter mr-2"></i>
-                            Filters
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Advanced Filters Panel -->
-                <div id="filtersPanel" class="hidden mt-4 pt-4 border-t border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <!-- Category Filter -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                            <select name="category" onchange="this.form.submit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-orange-500">
-                                <option value="">All Categories</option>
-                                <?php foreach ($categories as $category): ?>
-                                    <option value="<?php echo $category['id']; ?>"
-                                            <?php echo $category_filter == $category['id'] ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($category['name']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <!-- Vendor Filter -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Vendor</label>
-                            <select name="vendor_id" onchange="this.form.submit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-orange-500">
-                                <option value="">All Vendors</option>
-                                <?php foreach ($vendors as $vendor): ?>
-                                    <option value="<?php echo $vendor['id']; ?>"
-                                            <?php echo $vendor_filter == $vendor['id'] ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($vendor['name']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500">
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Price Range Filter -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
-                            <select name="price" onchange="this.form.submit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-orange-500">
-                                <option value="">Any Price</option>
-                                <option value="under_100" <?php echo $price_filter == 'under_100' ? 'selected' : ''; ?>>Under ₱100</option>
-                                <option value="100_300" <?php echo $price_filter == '100_300' ? 'selected' : ''; ?>>₱100 - ₱300</option>
-                                <option value="300_500" <?php echo $price_filter == '300_500' ? 'selected' : ''; ?>>₱300 - ₱500</option>
-                                <option value="over_500" <?php echo $price_filter == 'over_500' ? 'selected' : ''; ?>>Over ₱500</option>
-                            </select>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Price Range</label>
+                            <div class="relative">
+                                <select name="price" onchange="this.form.submit()" class="form-control w-full appearance-none cursor-pointer">
+                                    <option value="">Any Price</option>
+                                    <option value="under_100" <?php echo $price_filter == 'under_100' ? 'selected' : ''; ?>>Under ₱100</option>
+                                    <option value="100_300" <?php echo $price_filter == '100_300' ? 'selected' : ''; ?>>₱100 - ₱300</option>
+                                    <option value="300_500" <?php echo $price_filter == '300_500' ? 'selected' : ''; ?>>₱300 - ₱500</option>
+                                    <option value="over_500" <?php echo $price_filter == 'over_500' ? 'selected' : ''; ?>>Over ₱500</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500">
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Sort Options -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
-                            <select name="sort" onchange="this.form.submit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-orange-500">
-                                <option value="newest" <?php echo $sort_by == 'newest' ? 'selected' : ''; ?>>Newest First</option>
-                                <option value="price_low" <?php echo $sort_by == 'price_low' ? 'selected' : ''; ?>>Price: Low to High</option>
-                                <option value="price_high" <?php echo $sort_by == 'price_high' ? 'selected' : ''; ?>>Price: High to Low</option>
-                                <option value="rating" <?php echo $sort_by == 'rating' ? 'selected' : ''; ?>>Highest Rated</option>
-                                <option value="distance" <?php echo $sort_by == 'distance' ? 'selected' : ''; ?>>Nearest First</option>
-                            </select>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Sort By</label>
+                            <div class="relative">
+                                <select name="sort" onchange="this.form.submit()" class="form-control w-full appearance-none cursor-pointer">
+                                    <option value="newest" <?php echo $sort_by == 'newest' ? 'selected' : ''; ?>>Newest First</option>
+                                    <option value="price_low" <?php echo $sort_by == 'price_low' ? 'selected' : ''; ?>>Price: Low to High</option>
+                                    <option value="price_high" <?php echo $sort_by == 'price_high' ? 'selected' : ''; ?>>Price: High to Low</option>
+                                    <option value="rating" <?php echo $sort_by == 'rating' ? 'selected' : ''; ?>>Highest Rated</option>
+                                    <option value="distance" <?php echo $sort_by == 'distance' ? 'selected' : ''; ?>>Nearest First</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500">
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Quick Filters -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Quick Filters</label>
-                            <div class="flex flex-wrap gap-2">
-                                <button type="button" onclick="setQuickFilter('cuisine', 'filipino')" class="px-3 py-1 text-xs bg-orange-100 text-orange-700 rounded-full hover:bg-orange-200">Filipino</button>
-                                <button type="button" onclick="setQuickFilter('cuisine', 'pizza')" class="px-3 py-1 text-xs bg-orange-100 text-orange-700 rounded-full hover:bg-orange-200">Pizza</button>
-                                <button type="button" onclick="setQuickFilter('ingredients', 'spicy')" class="px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full hover:bg-red-200">Spicy</button>
-                                <button type="button" onclick="setQuickFilter('ingredients', 'vegetarian')" class="px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full hover:bg-green-200">Vegetarian</button>
+                        <div class="col-span-full">
+                            <label class="block text-sm font-bold text-gray-700 mb-3">Quick Tags</label>
+                            <div class="flex flex-wrap gap-3">
+                                <button type="button" onclick="setQuickFilter('cuisine', 'filipino')" class="px-4 py-2 text-sm bg-orange-50 text-orange-700 rounded-full hover:bg-orange-100 border border-orange-100 transition-colors">🇵🇭 Filipino</button>
+                                <button type="button" onclick="setQuickFilter('cuisine', 'pizza')" class="px-4 py-2 text-sm bg-orange-50 text-orange-700 rounded-full hover:bg-orange-100 border border-orange-100 transition-colors">🍕 Pizza</button>
+                                <button type="button" onclick="setQuickFilter('ingredients', 'spicy')" class="px-4 py-2 text-sm bg-red-50 text-red-700 rounded-full hover:bg-red-100 border border-red-100 transition-colors">🌶️ Spicy</button>
+                                <button type="button" onclick="setQuickFilter('ingredients', 'vegetarian')" class="px-4 py-2 text-sm bg-green-50 text-green-700 rounded-full hover:bg-green-100 border border-green-100 transition-colors">🥬 Vegetarian</button>
                             </div>
                         </div>
                     </div>
@@ -526,297 +414,202 @@ if (isset($_POST['action']) && $_POST['action'] === 'remove_favorite') {
             </div>
         </section>
 
-        <!-- Favorites Section -->
-        <section id="favorites" class="mb-8">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Your Favorites</h2>
-            </div>
+                <!-- Product Grid -->
+                <div id="products">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-900">
+                            <?php echo !empty($search) ? 'Search Results' : 'Recommended for You'; ?>
+                        </h2>
+                        <span class="text-sm text-gray-500"><?php echo count($products); ?> items found</span>
+                    </div>
 
-            <?php if (empty($favorite_products)): ?>
-                <div class="brand-card rounded-lg shadow-sm p-12 text-center">
-                    <i class="fas fa-heart text-4xl text-gray-300 mb-4"></i>
-                    <h3 class="text-lg font-medium text-gray-700 mb-2">No favorites yet</h3>
-                    <p class="text-gray-500">Tap the heart on any product to save it here.</p>
-                </div>
-            <?php else: ?>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <?php foreach ($favorite_products as $product): ?>
-                        <div class="product-card brand-card rounded-lg shadow-sm overflow-hidden">
-                            <div class="relative">
-                                <?php if (!empty($product['image'])): ?>
-                                    <img src="<?php echo htmlspecialchars($product['image']); ?>"
-                                         alt="<?php echo htmlspecialchars($product['product_name']); ?>"
-                                         class="w-full h-48 object-cover">
-                                <?php else: ?>
-                                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                                        <i class="fas fa-utensils text-4xl text-gray-400"></i>
+                    <?php if (empty($products)): ?>
+                        <div class="content-card p-12 text-center">
+                            <div class="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-search text-4xl text-orange-300"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">No cravings found?</h3>
+                            <p class="text-gray-500 max-w-md mx-auto">We couldn't find any matches for your search. Try adjusting your filters or search for something else.</p>
+                            <button onclick="window.location.href='customer.php'" class="mt-6 btn-outline btn-pill">
+                                Clear Filters
+                            </button>
+                        </div>
+                    <?php else: ?>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <?php foreach ($products as $product): ?>
+                                <div class="content-card group relative flex flex-col h-full">
+                                    <!-- Image -->
+                                    <div class="relative h-48 overflow-hidden">
+                                        <?php if (!empty($product['image'])): ?>
+                                            <img src="<?php echo htmlspecialchars($product['image']); ?>" 
+                                                 alt="<?php echo htmlspecialchars($product['product_name']); ?>"
+                                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                        <?php else: ?>
+                                            <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                                                <i class="fas fa-utensils text-4xl text-gray-300"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <!-- Overlay Gradient -->
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                                        <!-- Badges -->
+                                        <div class="absolute top-3 left-3 flex flex-col gap-2">
+                                            <?php if ($product['stock_quantity'] == 0): ?>
+                                                <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-lg shadow-sm">Out of Stock</span>
+                                            <?php elseif ($product['stock_quantity'] < 5): ?>
+                                                <span class="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-lg shadow-sm">Low Stock</span>
+                                            <?php endif; ?>
+                                        </div>
+
+                                        <!-- Quick Actions (Hover) -->
+                                        <div class="absolute bottom-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                                            <button onclick="showQuickReview(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars(addslashes($product['product_name'])); ?>')" 
+                                                    class="bg-white text-gray-700 w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:bg-orange-50 hover:text-orange-600 transition-colors" title="Review">
+                                                <i class="fas fa-star text-xs"></i>
+                                            </button>
+                                            <form method="POST" class="inline-block">
+                                                <input type="hidden" name="action" value="<?php echo in_array($product['id'], $favorites) ? 'remove_favorite' : 'add_favorite'; ?>">
+                                                <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                                                <button type="submit" class="bg-white <?php echo in_array($product['id'], $favorites) ? 'text-red-500' : 'text-gray-700'; ?> w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:bg-red-50 hover:text-red-500 transition-colors" title="Favorite">
+                                                    <i class="fas fa-heart text-xs"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
-                                <?php endif; ?>
 
-                                <!-- Remove Favorite Button -->
-                                <form method="POST" class="absolute top-3 right-3">
-                                    <input type="hidden" name="action" value="remove_favorite">
-                                    <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-                                    <button type="submit" class="p-2 rounded-full text-red-500 bg-white bg-opacity-90 hover:bg-opacity-100 transition-all">
-                                        <i class="fas fa-heart text-xl"></i>
-                                    </button>
-                                </form>
+                                    <!-- Content -->
+                                    <div class="p-5 flex-1 flex flex-col">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <div>
+                                                <h3 class="font-bold text-gray-900 line-clamp-1" title="<?php echo htmlspecialchars($product['product_name']); ?>">
+                                                    <?php echo htmlspecialchars($product['product_name']); ?>
+                                                </h3>
+                                                <p class="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                                                    <i class="fas fa-store text-orange-400"></i>
+                                                    <?php echo htmlspecialchars($product['vendor_name']); ?>
+                                                </p>
+                                            </div>
+                                            <div class="flex items-center gap-1 bg-orange-50 px-2 py-1 rounded-lg">
+                                                <i class="fas fa-star text-orange-400 text-xs"></i>
+                                                <span class="text-xs font-bold text-orange-700"><?php echo number_format($product['avg_rating'], 1); ?></span>
+                                            </div>
+                                        </div>
+
+                                        <p class="text-sm text-gray-600 mb-4 line-clamp-2 flex-1">
+                                            <?php echo htmlspecialchars($product['description']); ?>
+                                        </p>
+
+                                        <div class="flex items-center justify-between pt-4 border-t border-gray-50 mt-auto">
+                                            <span class="text-lg font-bold text-gray-900">₱<?php echo number_format($product['price'], 2); ?></span>
+                                            <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars(addslashes($product['product_name'])); ?>', <?php echo $product['price']; ?>, '<?php echo htmlspecialchars(addslashes($product['vendor_name'])); ?>', '<?php echo !empty($product['image']) ? htmlspecialchars(addslashes($product['image'])) : ''; ?>')"
+                                                    class="btn-primary btn-pill text-xs py-2 px-4 shadow-orange-200 <?php echo $product['stock_quantity'] == 0 ? 'opacity-50 cursor-not-allowed' : ''; ?>"
+                                                    <?php echo $product['stock_quantity'] == 0 ? 'disabled' : ''; ?>>
+                                                Add to Cart <i class="fas fa-plus ml-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div> <!-- End Left Column -->
+
+            <!-- Right Column: Sidebar (4 cols) -->
+            <div class="lg:col-span-4 space-y-8">
+                
+                <!-- Cart Widget -->
+                <div class="content-card p-6 sticky top-24">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-gray-900 flex items-center gap-2">
+                            <i class="fas fa-shopping-basket text-orange-500"></i> Your Cart
+                        </h3>
+                        <button onclick="clearCart()" class="text-xs text-red-500 hover:text-red-600 font-medium">Clear</button>
+                    </div>
+
+                    <div id="cartContainer">
+                        <!-- Empty State -->
+                        <div id="emptyCart" class="text-center py-8">
+                            <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-shopping-cart text-gray-300"></i>
                             </div>
+                            <p class="text-sm text-gray-500">Your cart is empty</p>
+                        </div>
 
-                            <div class="p-4">
-                                <h3 class="font-bold text-lg text-gray-800 mb-1"><?php echo htmlspecialchars($product['product_name']); ?></h3>
-                                <p class="text-gray-600 text-sm mb-2">by <?php echo htmlspecialchars($product['vendor_name']); ?></p>
-                                <p class="text-sm text-orange-600">₱<?php echo number_format($product['price'], 2); ?></p>
+                        <!-- Cart Items (Hidden by default, populated by JS) -->
+                        <div id="cartTableWrapper" class="hidden">
+                            <div id="cartRows" class="space-y-4 mb-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                                <!-- JS will populate this -->
+                            </div>
+                            
+                            <div class="border-t border-gray-100 pt-4">
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-gray-600 font-medium">Total</span>
+                                    <span class="text-xl font-bold text-gray-900" id="cartTotal">₱0.00</span>
+                                </div>
+                                <button onclick="checkoutCart()" class="btn-primary btn-pill w-full justify-center py-3 shadow-lg shadow-orange-200">
+                                    Checkout Now
+                                </button>
                             </div>
                         </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </section>
-
-        <!-- Cart Section -->
-        <section id="cart" class="mb-8">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Your Cart</h2>
-                <button id="clearCartBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm" onclick="clearCart()">Clear Cart</button>
-            </div>
-
-            <div id="cartContainer" class="brand-card rounded-lg shadow-sm p-6">
-                <div id="emptyCart" class="text-center text-gray-500 py-8 hidden">
-                    <i class="fas fa-shopping-cart text-4xl mb-2"></i>
-                    <p>Your cart is empty.</p>
-                </div>
-
-                <div id="cartTableWrapper" class="overflow-x-auto hidden">
-                    <table class="min-w-full">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qty</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cartRows" class="bg-white divide-y divide-gray-200"></tbody>
-                    </table>
-                    <div class="flex justify-end mt-4">
-                        <button class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg" onclick="checkoutCart()">Checkout</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Customer Dashboard Section -->
-        <section id="dashboard" class="mb-8">
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Browse Products</h2>
-                <p class="text-gray-600 text-sm mt-1">Discover delicious food from local vendors</p>
-            </div>
-
-            <!-- Key Metrics Cards for Customer -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <!-- Available Products Card -->
-                <div class="stats-card brand-card rounded-lg shadow-sm p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-600 text-sm">Available Products</p>
-                            <p class="text-2xl font-bold text-gray-800"><?php echo count($products); ?></p>
-                        </div>
-                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-utensils text-green-600 text-xl"></i>
-                        </div>
                     </div>
                 </div>
 
-                <!-- Favorite Products Card -->
-                <div class="stats-card brand-card rounded-lg shadow-sm p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-600 text-sm">Favorite Products</p>
-                            <p class="text-2xl font-bold text-gray-800"><?php echo count($favorites); ?></p>
+                <!-- Favorites Widget -->
+                <div class="content-card p-6">
+                    <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <i class="fas fa-heart text-red-500"></i> Favorites
+                    </h3>
+                    
+                    <?php if (empty($favorite_products)): ?>
+                        <div class="text-center py-6">
+                            <p class="text-sm text-gray-500">No favorites yet.</p>
                         </div>
-                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-heart text-red-600 text-xl"></i>
+                    <?php else: ?>
+                        <div class="space-y-3">
+                            <?php foreach (array_slice($favorite_products, 0, 3) as $fav): ?>
+                                <div class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer" onclick="window.location.href='?search=<?php echo urlencode($fav['product_name']); ?>'">
+                                    <div class="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
+                                        <?php if (!empty($fav['image'])): ?>
+                                            <img src="<?php echo htmlspecialchars($fav['image']); ?>" class="w-full h-full object-cover">
+                                        <?php else: ?>
+                                            <div class="w-full h-full flex items-center justify-center">
+                                                <i class="fas fa-utensils text-gray-300 text-xs"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="text-sm font-bold text-gray-900 truncate"><?php echo htmlspecialchars($fav['product_name']); ?></h4>
+                                        <p class="text-xs text-gray-500 truncate"><?php echo htmlspecialchars($fav['vendor_name']); ?></p>
+                                    </div>
+                                    <span class="text-xs font-bold text-orange-600">₱<?php echo number_format($fav['price'], 0); ?></span>
+                                </div>
+                            <?php endforeach; ?>
+                            
+                            <?php if (count($favorite_products) > 3): ?>
+                                <button class="w-full text-center text-xs text-orange-600 font-bold hover:text-orange-700 mt-2">
+                                    View All (<?php echo count($favorite_products); ?>)
+                                </button>
+                            <?php endif; ?>
                         </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
 
-                <!-- Categories Card -->
-                <div class="stats-card bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-600 text-sm">Food Categories</p>
-                            <p class="text-2xl font-bold text-gray-800"><?php echo count($categories); ?></p>
-                        </div>
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-list text-blue-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Nearby Vendors Map Section -->
-        <section id="vendors-map" class="mb-8">
-            <div class="brand-card rounded-xl shadow-sm p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800">Nearby Vendors</h2>
-                        <p class="text-gray-600 text-sm mt-1">Find local food vendors near you</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <label for="travelMode" class="text-sm text-gray-600">Mode:</label>
-                        <select id="travelMode" onchange="setTravelMode(this.value)" class="border rounded px-2 py-1 text-sm">
-                            <option value="DRIVING">Driving</option>
-                            <option value="WALKING">Walking</option>
-                        </select>
-                        <button onclick="toggleMapView()" class="btn-orange px-4 py-2 rounded-lg">
-                            <i class="fas fa-map mr-2"></i>
-                            <span id="mapToggleText">Show Map</span>
+                <!-- Delivery Map Promo -->
+                <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 text-white relative overflow-hidden shadow-lg">
+                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full"></div>
+                    <div class="relative z-10">
+                        <h3 class="font-bold text-lg mb-2">Track Your Food</h3>
+                        <p class="text-orange-100 text-sm mb-4">See nearby vendors and track your delivery in real-time.</p>
+                        <button onclick="toggleMapView()" class="bg-white text-orange-600 px-4 py-2 rounded-full text-sm font-bold hover:bg-orange-50 transition-colors w-full">
+                            Open Map
                         </button>
                     </div>
                 </div>
 
-                <!-- Map Container -->
-                <div id="mapContainer" class="hidden">
-                    <div id="map" class="w-full h-96 rounded-lg border border-gray-300"></div>
-                    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <?php foreach (array_slice($products, 0, 6) as $product): ?>
-                            <?php if (!empty($product['latitude']) && !empty($product['longitude'])): ?>
-                                <div class="vendor-card tasty-hover bg-gray-50 rounded-lg p-4 border border-gray-200" data-lat="<?php echo $product['latitude']; ?>" data-lng="<?php echo $product['longitude']; ?>">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                                            <i class="fas fa-store text-orange-600"></i>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h4 class="font-semibold text-gray-800"><?php echo htmlspecialchars($product['vendor_name']); ?></h4>
-                                            <p class="text-sm text-gray-600"><?php echo htmlspecialchars($product['product_name']); ?></p>
-                                            <p class="text-xs text-orange-600">₱<?php echo number_format($product['price'], 2); ?></p>
-                                        </div>
-                                        <div class="flex gap-2">
-                                            <button onclick="showVendorOnMap(<?php echo $product['latitude']; ?>, <?php echo $product['longitude']; ?>, '<?php echo htmlspecialchars($product['vendor_name']); ?>')"
-                                                    class="btn-orange px-3 py-1 text-sm rounded">
-                                                View
-                                            </button>
-                                            <button onclick="routeToVendor(<?php echo $product['latitude']; ?>, <?php echo $product['longitude']; ?>, '<?php echo htmlspecialchars($product['vendor_name']); ?>')"
-                                                    class="bg-white border border-orange-300 text-orange-700 hover:bg-orange-50 px-3 py-1 text-sm rounded">
-                                                Route
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-
-                <!-- Map Toggle Info -->
-                <div id="mapInfo" class="text-center py-8">
-                    <i class="fas fa-map-marked-alt text-4xl text-gray-300 mb-4"></i>
-                    <h3 class="text-lg font-medium text-gray-700 mb-2">Discover Nearby Vendors</h3>
-                    <p class="text-gray-500 mb-4">Click "Show Map" to see local food vendors near your location</p>
-                    <button onclick="getCurrentLocation()" class="btn-orange px-6 py-2 rounded-lg">
-                        <i class="fas fa-location-arrow mr-2"></i>
-                        Enable Location Services
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Products Section -->
-        <section id="products" class="mb-8">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Available Products</h2>
-            </div>
-
-            <?php if (empty($products)): ?>
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-                    <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
-                    <h3 class="text-lg font-medium text-gray-700 mb-2">No products found</h3>
-                    <p class="text-gray-500">Try adjusting your search or filter criteria</p>
-                </div>
-            <?php else: ?>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <?php foreach ($products as $product): ?>
-                        <div class="product-card bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                            <div class="relative">
-                                <?php if (!empty($product['image'])): ?>
-                                    <img src="<?php echo htmlspecialchars($product['image']); ?>"
-                                         alt="<?php echo htmlspecialchars($product['product_name']); ?>"
-                                         class="w-full h-48 object-cover">
-                                <?php else: ?>
-                                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                                        <i class="fas fa-utensils text-4xl text-gray-400"></i>
-                                    </div>
-                                <?php endif; ?>
-
-                                <!-- Favorite Button -->
-                                <form method="POST" class="absolute top-3 right-3">
-                                    <input type="hidden" name="action" value="<?php echo in_array($product['id'], $favorites) ? 'remove_favorite' : 'add_favorite'; ?>">
-                                    <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-                                    <button type="submit" class="p-2 rounded-full hover:bg-white hover:bg-opacity-20 transition-all <?php echo in_array($product['id'], $favorites) ? 'text-red-500' : 'text-white'; ?>">
-                                        <i class="fas fa-heart text-xl"></i>
-                                    </button>
-                                </form>
-
-                                <!-- Stock Status -->
-                                <?php if ($product['stock_quantity'] == 0): ?>
-                                    <div class="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
-                                        Out of Stock
-                                    </div>
-                                <?php elseif ($product['stock_quantity'] < 5): ?>
-                                    <div class="absolute top-3 left-3 bg-orange-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
-                                        Low Stock
-                                    </div>
-                                <?php endif; ?>
-
-                                <!-- Quick Review Button -->
-                                <button onclick="showQuickReview(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars($product['product_name']); ?>')"
-                                        class="absolute bottom-3 right-3 bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-800 px-3 py-1 rounded-full text-xs font-medium transition-all">
-                                    <i class="fas fa-star mr-1"></i>
-                                    Rate
-                                </button>
-                            </div>
-
-                            <div class="p-4">
-                                <h3 class="font-bold text-lg text-gray-800 mb-1"><?php echo htmlspecialchars($product['product_name']); ?></h3>
-                                <p class="text-gray-600 text-sm mb-2">by <?php echo htmlspecialchars($product['vendor_name']); ?></p>
-
-                                <?php if (!empty($product['category_name'])): ?>
-                                    <p class="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded-full inline-block mb-2">
-                                        <?php echo htmlspecialchars($product['category_name']); ?>
-                                    </p>
-                                <?php endif; ?>
-
-                                <p class="text-sm mb-3 line-clamp-2 text-gray-600"><?php echo htmlspecialchars($product['description']); ?></p>
-
-                                <div class="flex items-center justify-between mb-3">
-                                    <span class="text-xl font-bold text-green-600">₱<?php echo number_format($product['price'], 2); ?></span>
-                                    <?php if ($product['avg_rating'] > 0): ?>
-                                        <div class="flex items-center">
-                                            <i class="fas fa-star text-yellow-400 text-sm mr-1"></i>
-                                            <span class="text-sm text-gray-600"><?php echo number_format($product['avg_rating'], 1); ?></span>
-                                            <span class="text-xs text-gray-500 ml-1">(<?php echo $product['total_reviews']; ?>)</span>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-
-                                <div class="flex gap-2">
-                                    <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars($product['product_name']); ?>')"
-                                            class="flex-1 btn-orange <?php echo $product['stock_quantity'] == 0 ? 'opacity-50 cursor-not-allowed' : ''; ?> text-sm"
-                                            <?php echo $product['stock_quantity'] == 0 ? 'disabled' : ''; ?>>
-                                        <?php echo $product['stock_quantity'] == 0 ? 'Out of Stock' : 'Add to Cart'; ?>
-                                    </button>
-                                    <button onclick="showProductDetails(<?php echo $product['id']; ?>)"
-                                            class="px-3 py-2 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
-                                        <i class="fas fa-info text-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </section>
+            </div> <!-- End Right Column -->
+        </div> <!-- End Grid -->
     </main>
 
     <script>
@@ -1067,16 +860,24 @@ if (isset($_POST['action']) && $_POST['action'] === 'remove_favorite') {
             toggleProfileDropdown();
         }
 
-        function addToCart(productId, productName) {
+        function addToCart(productId, productName, price, vendorName, image) {
             const existingItem = cart.find(item => item.id === productId);
             if (existingItem) {
                 existingItem.quantity += 1;
             } else {
-                cart.push({ id: productId, name: productName, quantity: 1 });
+                cart.push({ 
+                    id: productId, 
+                    name: productName, 
+                    price: price,
+                    vendor: vendorName,
+                    image: image,
+                    quantity: 1 
+                });
             }
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartBadge();
             renderCart();
+            showNotification('Added to cart', 'success');
         }
 
         function incQty(productId) {
@@ -1143,17 +944,43 @@ if (isset($_POST['action']) && $_POST['action'] === 'remove_favorite') {
 
             empty.classList.add('hidden');
             tableWrap.classList.remove('hidden');
-            rows.innerHTML = cart.map(item => `
+            
+            let total = 0;
+            
+            rows.innerHTML = cart.map(item => {
+                const itemTotal = (item.price || 0) * item.quantity;
+                total += itemTotal;
+                
+                return `
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${escapeHtml(item.name)}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.quantity}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            ${item.image ? `<div class="flex-shrink-0 h-10 w-10 mr-3">
+                                <img class="h-10 w-10 rounded-full object-cover" src="${escapeHtml(item.image)}" alt="">
+                            </div>` : ''}
+                            <div>
+                                <div class="text-sm font-medium text-gray-900">${escapeHtml(item.name)}</div>
+                                ${item.vendor ? `<div class="text-xs text-gray-500">${escapeHtml(item.vendor)}</div>` : ''}
+                                <div class="text-xs text-orange-600">₱${(item.price || 0).toFixed(2)}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div class="flex items-center border border-gray-200 rounded-lg w-max">
+                            <button class="px-2 py-1 hover:bg-gray-50 text-gray-600" onclick="decQty(${item.id})">-</button>
+                            <span class="px-2 py-1 font-medium min-w-[1.5rem] text-center">${item.quantity}</span>
+                            <button class="px-2 py-1 hover:bg-gray-50 text-gray-600" onclick="incQty(${item.id})">+</button>
+                        </div>
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <button class="px-2 py-1 bg-gray-100 rounded hover:bg-gray-200" onclick="decQty(${item.id})">-</button>
-                        <button class="ml-1 px-2 py-1 bg-gray-100 rounded hover:bg-gray-200" onclick="incQty(${item.id})">+</button>
-                        <button class="ml-2 px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200" onclick="removeFromCart(${item.id})">Remove</button>
+                        <button class="text-red-500 hover:text-red-700 transition-colors" onclick="removeFromCart(${item.id})">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
+            
+            // Add total row if needed, or update a total element elsewhere
         }
 
         function checkoutCart() {

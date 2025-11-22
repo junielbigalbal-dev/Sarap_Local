@@ -696,108 +696,124 @@ try {
       }
     ?>
     <!-- Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>">
     <style>
-        /* Enhanced responsive button styling for vendor page */
-        .btn-responsive {
-            @apply px-4 py-2 text-sm font-medium rounded-lg transition-colors min-h-[44px];
+        body {
+            background-color: var(--bg-cream);
+            font-family: var(--font-body);
         }
 
-        /* Mobile-first responsive button adjustments */
-        @media (max-width: 640px) {
-            .btn-responsive {
-                @apply px-3 py-2 text-xs min-h-[48px] min-w-[48px];
-            }
-
-            /* Ensure buttons in cards have proper touch targets */
-            .product-card button {
-                @apply min-h-[44px] px-3 py-2 text-sm;
-            }
-
-            /* Modal buttons on mobile */
-            #productModal button, #deleteModal button {
-                @apply min-h-[48px] px-4 py-2 text-sm;
-            }
-
-            /* Header buttons on mobile */
-            .flex.items-center.space-x-4 button {
-                @apply min-h-[40px] px-2 py-1 text-xs;
-            }
+        /* Dashboard specific overrides */
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .product-card {
-            transition: all 0.3s ease;
+
+        .content-card {
+            background-color: var(--surface-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(0,0,0,0.03);
+            overflow: hidden;
+            transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
         }
-        .product-card:hover {
+
+        .content-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: var(--shadow-hover);
         }
+
+        .form-control {
+            background-color: var(--surface-white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: 0.75rem 1rem;
+            transition: all var(--transition-fast);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
         .stats-card {
-            transition: all 0.2s ease;
+            background: var(--surface-white);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: all var(--transition-smooth);
         }
+
         .stats-card:hover {
-            transform: translateY(-1px);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
         }
-        .order-card {
-            transition: all 0.2s ease;
-        }
-        .order-card:hover {
-            transform: translateY(-1px);
-        }
-        #vendorMap {
-            min-height: 18rem;
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 640px) {
+            .btn-pill {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
     <!-- Header -->
-    <header class="brand-header shadow-sm sticky top-0 z-50">
+    <header class="dashboard-header sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
+            <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
-                <a href="index.php" class="flex items-center">
-                    <div class="w-9 h-9 mr-3 rounded-full bg-white/90 flex items-center justify-center shadow-sm">
-                        <img src="images/S.png" alt="Sarap Local" class="w-7 h-7 rounded-full">
+                <a href="index.php" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                        <img src="images/S.png" alt="Sarap Local" class="w-8 h-8 object-contain">
                     </div>
                     <div class="flex flex-col leading-tight">
-                        <span class="text-xs uppercase tracking-[0.2em] text-orange-100">Vendor</span>
-                        <span class="text-xl font-semibold brand-script">Sarap Local</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-orange-600">Vendor</span>
+                        <span class="text-xl font-bold font-heading text-gray-900">Sarap Local</span>
                     </div>
                 </a>
 
                 <!-- User Actions -->
-                <div class="flex items-center space-x-2 sm:space-x-4">
+                <div class="flex items-center gap-4">
                     <!-- Search -->
-                    <a href="search.php" class="relative text-white hover:text-orange-100 transition-colors p-1" title="Search">
-                        <i class="fas fa-search text-lg sm:text-xl"></i>
+                    <a href="search.php" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-orange-100 hover:text-orange-600 transition-colors" title="Search">
+                        <i class="fas fa-search"></i>
                     </a>
 
                     <!-- Notifications -->
                     <div class="relative">
-                        <button onclick="toggleNotificationDropdown()" class="relative text-white hover:text-orange-100 transition-colors p-1">
-                            <i class="fas fa-bell text-lg sm:text-xl"></i>
-                            <span id="notificationBadge" class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center hidden">0</span>
+                        <button onclick="toggleNotificationDropdown()" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-orange-100 hover:text-orange-600 transition-colors">
+                            <i class="fas fa-bell"></i>
+                            <span id="notificationBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden shadow-sm">0</span>
                         </button>
-                        <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
-                            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                                <h3 class="font-semibold text-gray-800">Notifications</h3>
-                                <button onclick="clearAllNotifications()" class="text-xs text-orange-600 hover:text-orange-700">Clear All</button>
+                        <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl z-50 max-h-96 overflow-y-auto border border-gray-100">
+                            <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-xl">
+                                <h3 class="font-bold text-gray-900">Notifications</h3>
+                                <button onclick="clearAllNotifications()" class="text-xs font-bold text-orange-600 hover:text-orange-700 uppercase tracking-wide">Clear All</button>
                             </div>
-                            <div id="notificationList" class="divide-y divide-gray-100">
-                                <div class="p-4 text-center text-gray-500 text-sm">Loading...</div>
+                            <div id="notificationList" class="divide-y divide-gray-50">
+                                <div class="p-8 text-center text-gray-400 text-sm">Loading...</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Profile (Direct Link) -->
-                    <a href="profile.php" class="relative text-white hover:text-orange-100 transition-colors p-1">
-                        <i class="fas fa-user-circle text-lg sm:text-xl"></i>
+                    <!-- Profile -->
+                    <a href="profile.php" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-orange-100 hover:text-orange-600 transition-colors" title="Profile">
+                        <i class="fas fa-user"></i>
                     </a>
 
                     <!-- Messages -->
-                    <a href="chat.php" class="relative text-white hover:text-orange-100 transition-colors p-1">
-                        <i class="fas fa-comments text-lg sm:text-xl"></i>
-                        <span id="messageBadge" class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center hidden">0</span>
+                    <a href="chat.php" class="relative w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-blue-100 hover:text-blue-600 transition-colors" title="Messages">
+                        <i class="fas fa-comment-alt"></i>
+                        <span id="messageBadge" class="absolute -top-1 -right-1 bg-blue-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden shadow-sm">0</span>
                     </a>
                 </div>
             </div>
@@ -823,100 +839,262 @@ try {
         <!-- Dashboard Analytics Section -->
         <section id="dashboard" class="mb-8">
             <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Sales Dashboard</h2>
-                <p class="text-gray-600 text-sm mt-1">Your business performance overview for the last 30 days</p>
+                <h2 class="text-2xl font-bold font-heading text-gray-900">Sales Dashboard</h2>
+                <p class="text-gray-500 text-sm mt-1">Your business performance overview for the last 30 days</p>
             </div>
 
             <!-- Key Metrics Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <!-- Total Sales Card -->
-                <div class="stats-card brand-card rounded-lg shadow-sm p-6">
+                <div class="stats-card group">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm">Total Sales</p>
-                            <p class="text-2xl font-bold text-gray-800">₱<?php echo number_format($sales_data['total_sales'], 2); ?></p>
+                            <p class="text-gray-500 text-sm font-medium uppercase tracking-wide">Total Sales</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-1">₱<?php echo number_format($sales_data['total_sales'], 2); ?></p>
                         </div>
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-peso-sign text-blue-600 text-xl"></i>
+                        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center group-hover:bg-orange-100 transition-colors">
+                            <i class="fas fa-coins text-orange-500 text-2xl"></i>
                         </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-green-500 font-medium flex items-center">
+                            <i class="fas fa-arrow-up mr-1"></i> 12%
+                        </span>
+                        <span class="text-gray-400 ml-2">vs last month</span>
                     </div>
                 </div>
 
                 <!-- Total Orders Card -->
-                <div class="stats-card bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="stats-card group">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm">Total Orders</p>
-                            <p class="text-2xl font-bold text-gray-800"><?php echo $sales_data['total_orders']; ?></p>
+                            <p class="text-gray-500 text-sm font-medium uppercase tracking-wide">Total Orders</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-1"><?php echo $sales_data['total_orders']; ?></p>
                         </div>
-                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-shopping-cart text-green-600 text-xl"></i>
+                        <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                            <i class="fas fa-shopping-bag text-blue-500 text-2xl"></i>
                         </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-green-500 font-medium flex items-center">
+                            <i class="fas fa-arrow-up mr-1"></i> 5%
+                        </span>
+                        <span class="text-gray-400 ml-2">vs last month</span>
                     </div>
                 </div>
 
                 <!-- Average Order Value Card -->
-                <div class="stats-card bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="stats-card group">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm">Avg Order Value</p>
-                            <p class="text-2xl font-bold text-gray-800">
+                            <p class="text-gray-500 text-sm font-medium uppercase tracking-wide">Avg Order Value</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-1">
                                 ₱<?php echo $sales_data['total_orders'] > 0 ? number_format($sales_data['total_sales'] / $sales_data['total_orders'], 2) : '0.00'; ?>
                             </p>
                         </div>
-                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+                        <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center group-hover:bg-purple-100 transition-colors">
+                            <i class="fas fa-chart-pie text-purple-500 text-2xl"></i>
                         </div>
                     </div>
-                </div>
-            <!-- Vendor Badges Section -->
-            <div class="brand-card rounded-lg shadow-sm p-6 mb-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">Vendor Achievements</h3>
-                <div id="vendorBadges" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Vendor badges will be loaded here -->
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-red-500 font-medium flex items-center">
+                            <i class="fas fa-arrow-down mr-1"></i> 2%
+                        </span>
+                        <span class="text-gray-400 ml-2">vs last month</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- Vendor Badges Section -->
+            <div class="content-card p-6 mb-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Vendor Achievements</h3>
+                <div id="vendorBadges" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Vendor badges will be loaded here -->
+                    <div class="flex items-center p-3 bg-yellow-50 rounded-xl border border-yellow-100">
+                        <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 mr-3">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-900">Rising Star</p>
+                            <p class="text-xs text-gray-500">Top rated vendor</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Top Selling Products Chart -->
-                <div class="brand-card rounded-lg shadow-sm p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Top Selling Products</h3>
+                <div class="content-card p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Top Selling Products</h3>
                     <canvas id="topProductsChart" width="400" height="200"></canvas>
                 </div>
 
                 <!-- Recent Orders Chart -->
-                <div class="brand-card rounded-lg shadow-sm p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Orders</h3>
+                <div class="content-card p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Recent Orders</h3>
                     <canvas id="ordersChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Food Reels Section -->
+        <section id="reels" class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold font-heading text-gray-900">Food Reels</h2>
+                <button onclick="openAddReelModal()"
+                        class="btn-primary btn-pill flex items-center gap-2 shadow-lg shadow-orange-200">
+                    <i class="fas fa-video"></i> Add Reel
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Add New Reel Card -->
+                <div onclick="openAddReelModal()" class="content-card p-6 flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-all group border-2 border-dashed border-orange-200 bg-orange-50/50 h-80">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform mb-4">
+                        <i class="fas fa-plus text-2xl text-orange-500"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900">Add New Reel</h3>
+                    <p class="text-sm text-gray-500 text-center mt-2">Showcase your food with a short video</p>
+                </div>
+
+                <!-- Existing Reels -->
+                <?php
+                // Fetch reels
+                $reels_stmt = $conn->prepare("SELECT * FROM food_reels WHERE vendor_id = ? ORDER BY created_at DESC");
+                $reels_stmt->bind_param("i", $vendor_id);
+                $reels_stmt->execute();
+                $reels = $reels_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+                foreach ($reels as $reel):
+                ?>
+                    <div class="content-card overflow-hidden group h-80 relative">
+                        <video src="<?php echo htmlspecialchars($reel['video_url']); ?>" 
+                               class="w-full h-full object-cover"
+                               poster="<?php echo htmlspecialchars($reel['thumbnail_url'] ?? ''); ?>">
+                        </video>
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-4">
+                            <h3 class="text-white font-bold text-lg mb-1"><?php echo htmlspecialchars($reel['title']); ?></h3>
+                            <p class="text-gray-200 text-sm line-clamp-2 mb-3"><?php echo htmlspecialchars($reel['description']); ?></p>
+                            
+                            <div class="flex justify-between items-center">
+                                <span class="text-white text-xs bg-black/30 px-2 py-1 rounded-full backdrop-blur-sm">
+                                    <i class="fas fa-eye mr-1"></i> <?php echo number_format($reel['views'] ?? 0); ?>
+                                </span>
+                                <button onclick="deleteReel(<?php echo $reel['id']; ?>)" class="text-white hover:text-red-400 transition-colors p-2">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer hover:bg-white/40 transition-colors">
+                            <i class="fas fa-play text-white ml-1"></i>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
+        <!-- Inventory Management Section -->
+        <section id="inventory" class="mb-8">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold font-heading text-gray-900">Inventory Management</h2>
+                <p class="text-gray-500 text-sm mt-1">Track and update your product stock levels</p>
+            </div>
+
+            <div class="content-card overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Product</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Current Stock</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Update Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            <?php foreach ($products as $product): ?>
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="h-10 w-10 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 mr-4">
+                                                <?php if (!empty($product['image'])): ?>
+                                                    <img class="h-10 w-10 object-cover" src="<?php echo htmlspecialchars($product['image']); ?>" alt="">
+                                                <?php else: ?>
+                                                    <div class="h-full w-full flex items-center justify-center text-gray-400">
+                                                        <i class="fas fa-utensils"></i>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-bold text-gray-900"><?php echo htmlspecialchars($product['product_name']); ?></div>
+                                                <div class="text-xs text-gray-500">ID: #<?php echo $product['id']; ?></div>
+                                            </div>
+                                        </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-bold text-gray-900"><?php echo $product['stock_quantity']; ?> units</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <?php if ($product['stock_quantity'] == 0): ?>
+                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-red-100 text-red-700 border border-red-200">
+                                                Out of Stock
+                                            </span>
+                                        <?php elseif ($product['stock_quantity'] < 5): ?>
+                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-orange-100 text-orange-700 border border-orange-200">
+                                                Low Stock
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-green-100 text-green-700 border border-green-200">
+                                                In Stock
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <form method="POST" class="flex items-center space-x-2">
+                                            <input type="hidden" name="action" value="update_stock">
+                                            <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                                            <input type="number" name="stock_quantity" value="<?php echo $product['stock_quantity']; ?>" min="0" 
+                                                   class="form-control w-24 py-1 px-2 text-sm h-auto">
+                                            <button type="submit" class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 flex items-center justify-center transition-colors" title="Update">
+                                                <i class="fas fa-save"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
 
         <!-- Delivery Map Section -->
         <section id="delivery-map" class="mb-8">
-            <div class="brand-card rounded-xl shadow-sm p-6">
-                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 gap-4">
+            <div class="content-card p-6">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-800">Delivery Map</h2>
-                        <p class="text-gray-600 text-sm mt-1">Visualize your business location for planning deliveries and pickups.</p>
+                        <h2 class="text-xl font-bold text-gray-900">Delivery Map</h2>
+                        <p class="text-gray-500 text-sm mt-1">Visualize your business location for planning deliveries and pickups.</p>
                     </div>
                 </div>
 
                 <div id="vendorMap"
-                     class="w-full rounded-lg border border-gray-200 overflow-hidden"
+                     class="w-full h-96 rounded-xl overflow-hidden shadow-inner bg-gray-50"
                      data-lat="<?php echo isset($vendor['latitude']) ? htmlspecialchars($vendor['latitude']) : ''; ?>"
                      data-lng="<?php echo isset($vendor['longitude']) ? htmlspecialchars($vendor['longitude']) : ''; ?>">
                 </div>
 
                 <?php if (empty($vendor['latitude']) || empty($vendor['longitude'])): ?>
-                    <p class="mt-4 text-sm text-gray-500">
-                        Set your business location in your vendor profile to see it on the map.
-                    </p>
+                    <div class="mt-4 p-4 bg-orange-50 text-orange-700 rounded-xl flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <p class="text-sm">Set your business location in your vendor profile to see it on the map.</p>
+                    </div>
                 <?php else: ?>
-                    <p class="mt-4 text-sm text-gray-500">
-                        This map centers on your registered business location.
-                    </p>
+                    <div class="mt-4 flex items-center text-sm text-gray-500">
+                        <i class="fas fa-map-marker-alt text-orange-500 mr-2"></i>
+                        <p>This map centers on your registered business location.</p>
+                    </div>
                 <?php endif; ?>
             </div>
         </section>
@@ -924,54 +1102,61 @@ try {
         <!-- Order Management Section -->
         <section id="orders" class="mb-8">
             <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Order Management</h2>
-                <p class="text-gray-600 text-sm mt-1">Manage your orders and update their status</p>
+                <h2 class="text-2xl font-bold font-heading text-gray-900">Order Management</h2>
+                <p class="text-gray-500 text-sm mt-1">Manage your orders and update their status</p>
             </div>
 
             <?php if (empty($recent_orders)): ?>
-                <div class="brand-card rounded-lg shadow-sm p-12 text-center">
-                    <i class="fas fa-shopping-bag text-4xl text-gray-300 mb-4"></i>
-                    <h3 class="text-lg font-medium text-gray-700 mb-2">No orders yet</h3>
+                <div class="content-card p-12 text-center">
+                    <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shopping-bag text-4xl text-gray-300"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">No orders yet</h3>
                     <p class="text-gray-500">Orders will appear here when customers place them</p>
                 </div>
             <?php else: ?>
-                <div class="brand-card rounded-lg shadow-sm overflow-hidden">
+                <div class="content-card overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="min-w-full">
-                            <thead class="bg-orange-50">
+                            <thead class="bg-gray-50 border-b border-gray-100">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order #</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Order #</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Customer</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tbody class="bg-white divide-y divide-gray-50">
                                 <?php foreach ($recent_orders as $order): ?>
-                                    <tr class="order-card">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
                                             #<?php echo htmlspecialchars($order['order_number']); ?>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <?php echo htmlspecialchars($order['customer_name']); ?>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-xs mr-3">
+                                                    <?php echo substr(htmlspecialchars($order['customer_name']), 0, 1); ?>
+                                                </div>
+                                                <?php echo htmlspecialchars($order['customer_name']); ?>
+                                            </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
                                             ₱<?php echo number_format($order['total_amount'], 2); ?>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full shadow-sm
                                                 <?php
                                                 switch ($order['status']) {
-                                                    case 'pending': echo 'bg-yellow-100 text-yellow-800'; break;
-                                                    case 'confirmed': echo 'bg-blue-100 text-blue-800'; break;
-                                                    case 'preparing': echo 'bg-orange-100 text-orange-800'; break;
-                                                    case 'ready': echo 'bg-purple-100 text-purple-800'; break;
-                                                    case 'out_for_delivery': echo 'bg-indigo-100 text-indigo-800'; break;
-                                                    case 'delivered': echo 'bg-green-100 text-green-800'; break;
-                                                    case 'cancelled': echo 'bg-red-100 text-red-800'; break;
-                                                    default: echo 'bg-gray-100 text-gray-800';
+                                                    case 'pending': echo 'bg-yellow-100 text-yellow-700 border border-yellow-200'; break;
+                                                    case 'confirmed': echo 'bg-blue-100 text-blue-700 border border-blue-200'; break;
+                                                    case 'preparing': echo 'bg-orange-100 text-orange-700 border border-orange-200'; break;
+                                                    case 'ready': echo 'bg-purple-100 text-purple-700 border border-purple-200'; break;
+                                                    case 'out_for_delivery': echo 'bg-indigo-100 text-indigo-700 border border-indigo-200'; break;
+                                                    case 'delivered': echo 'bg-green-100 text-green-700 border border-green-200'; break;
+                                                    case 'cancelled': echo 'bg-red-100 text-red-700 border border-red-200'; break;
+                                                    default: echo 'bg-gray-100 text-gray-700 border border-gray-200';
                                                 }
                                                 ?>">
                                                 <?php echo ucfirst(str_replace('_', ' ', $order['status'])); ?>
@@ -981,12 +1166,12 @@ try {
                                             <?php echo date('M d, Y', strtotime($order['created_at'])); ?>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <div class="flex space-x-2">
+                                            <div class="flex items-center gap-2">
                                                 <?php if ($order['status'] !== 'delivered' && $order['status'] !== 'cancelled'): ?>
                                                     <form method="POST" class="inline">
                                                         <input type="hidden" name="action" value="update_order_status">
                                                         <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
-                                                        <select name="status" onchange="this.form.submit()" class="text-xs border border-gray-300 rounded px-2 py-1">
+                                                        <select name="status" onchange="this.form.submit()" class="form-control py-1 px-2 text-xs h-auto w-auto">
                                                             <?php
                                                             $statuses = ['confirmed', 'preparing', 'ready', 'out_for_delivery', 'delivered', 'cancelled'];
                                                             foreach ($statuses as $status_option) {
@@ -998,7 +1183,9 @@ try {
                                                         </select>
                                                     </form>
                                                 <?php endif; ?>
-                                                <button onclick="viewOrderDetails(<?php echo $order['id']; ?>)" class="text-orange-700 hover:text-orange-800 text-xs">View</button>
+                                                <button onclick="viewOrderDetails(<?php echo $order['id']; ?>)" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-orange-100 hover:text-orange-600 transition-colors" title="View Details">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -1013,78 +1200,80 @@ try {
         <!-- Products Section -->
         <section id="products" class="mb-8">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">My Products</h2>
+                <h2 class="text-2xl font-bold font-heading text-gray-900">My Products</h2>
                 <button onclick="openAddProductModal()"
-                        class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
-                    <i class="fas fa-plus mr-2"></i> Add Product
+                        class="btn-primary btn-pill flex items-center gap-2 shadow-lg shadow-orange-200">
+                    <i class="fas fa-plus"></i> Add Product
                 </button>
             </div>
 
             <?php if (empty($products)): ?>
-                <div class="brand-card rounded-lg shadow-sm p-12 text-center">
-                    <i class="fas fa-utensils text-4xl text-gray-300 mb-4"></i>
-                    <h3 class="text-lg font-medium text-gray-700 mb-2">No products added yet</h3>
+                <div class="content-card p-12 text-center">
+                    <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-utensils text-4xl text-gray-300"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">No products added yet</h3>
                     <p class="text-gray-500">Get started by adding your first product</p>
                 </div>
             <?php else: ?>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     <?php foreach ($products as $product): ?>
-                        <div class="product-card brand-card rounded-lg shadow-sm overflow-hidden">
-                            <div class="relative">
+                        <div class="product-card content-card group">
+                            <div class="relative h-48 overflow-hidden">
                                 <?php if (!empty($product['image'])): ?>
                                     <img src="<?php echo htmlspecialchars($product['image']); ?>"
                                          alt="<?php echo htmlspecialchars($product['product_name']); ?>"
-                                         class="w-full h-48 object-cover">
+                                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                 <?php else: ?>
-                                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                                        <i class="fas fa-utensils text-4xl text-gray-400"></i>
+                                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                                        <i class="fas fa-utensils text-4xl text-gray-300"></i>
                                     </div>
                                 <?php endif; ?>
+                                
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-                                <div class="absolute top-2 right-2">
-                                    <button onclick="openEditProductModal(<?php echo htmlspecialchars(json_encode($product)); ?>)" class="bg-orange-600 text-white p-2 rounded-full hover:bg-orange-700 mr-1">
+                                <div class="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+                                    <button onclick="openEditProductModal(<?php echo htmlspecialchars(json_encode($product)); ?>)" class="w-8 h-8 rounded-full bg-white text-gray-700 hover:text-orange-600 flex items-center justify-center shadow-lg transition-colors">
                                         <i class="fas fa-edit text-xs"></i>
                                     </button>
-                                    <button onclick="confirmDeleteProduct(<?php echo $product['id']; ?>)" class="bg-red-600 text-white p-2 rounded-full hover:bg-red-700">
+                                    <button onclick="confirmDeleteProduct(<?php echo $product['id']; ?>)" class="w-8 h-8 rounded-full bg-white text-gray-700 hover:text-red-600 flex items-center justify-center shadow-lg transition-colors">
                                         <i class="fas fa-trash-alt text-xs"></i>
                                     </button>
                                 </div>
 
                                 <!-- Stock Status -->
                                 <?php if ($product['stock_quantity'] == 0): ?>
-                                    <div class="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                                    <div class="absolute top-2 left-2 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
                                         Out of Stock
                                     </div>
                                 <?php elseif ($product['stock_quantity'] < 5): ?>
-                                    <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                                    <div class="absolute top-2 left-2 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
                                         Low Stock
                                     </div>
                                 <?php endif; ?>
                             </div>
 
-                            <div class="p-4">
-                                <h3 class="font-bold text-lg text-gray-800 mb-1"><?php echo htmlspecialchars($product['product_name']); ?></h3>
-                                <p class="text-gray-600 text-sm mb-2"><?php echo htmlspecialchars($product['description']); ?></p>
-
-                                <?php if (!empty($product['category_name'])): ?>
-                                    <p class="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded-full inline-block mb-2">
-                                        <?php echo htmlspecialchars($product['category_name']); ?>
-                                    </p>
-                                <?php endif; ?>
-
-                                <div class="flex items-center justify-between mb-3">
-                                    <span class="text-xl font-bold text-green-600">₱<?php echo number_format($product['price'], 2); ?></span>
-                                    <span class="text-sm text-gray-500"><?php echo $product['stock_quantity']; ?> in stock</span>
+                            <div class="p-5">
+                                <div class="mb-2">
+                                    <?php if (!empty($product['category_name'])): ?>
+                                        <span class="text-xs font-bold text-orange-600 uppercase tracking-wider mb-1 block">
+                                            <?php echo htmlspecialchars($product['category_name']); ?>
+                                        </span>
+                                    <?php endif; ?>
+                                    <h3 class="font-bold text-lg text-gray-900 leading-tight mb-1 line-clamp-1"><?php echo htmlspecialchars($product['product_name']); ?></h3>
+                                    <p class="text-gray-500 text-sm line-clamp-2 h-10"><?php echo htmlspecialchars($product['description']); ?></p>
                                 </div>
 
-                                <div class="flex space-x-2">
+                                <div class="flex items-center justify-between pt-4 border-t border-gray-50">
+                                    <div class="flex flex-col">
+                                        <span class="text-lg font-bold text-gray-900">₱<?php echo number_format($product['price'], 2); ?></span>
+                                        <span class="text-xs text-gray-400"><?php echo $product['stock_quantity']; ?> in stock</span>
+                                    </div>
+                                    
                                     <button onclick="toggleProductAvailability(<?php echo $product['id']; ?>, <?php echo $product['is_available'] ? 'false' : 'true'; ?>)"
-                                            class="flex-1 <?php echo $product['is_available'] ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'; ?> text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors">
-                                        <?php echo $product['is_available'] ? 'Disable' : 'Enable'; ?>
-                                    </button>
-                                    <button onclick="openEditProductModal(<?php echo htmlspecialchars(json_encode($product)); ?>)"
-                                            class="bg-orange-500 hover:bg-orange-600 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors">
-                                        <i class="fas fa-edit"></i>
+                                            class="w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-sm <?php echo $product['is_available'] ? 'bg-green-100 text-green-600 hover:bg-red-100 hover:text-red-600' : 'bg-gray-100 text-gray-400 hover:bg-green-100 hover:text-green-600'; ?>"
+                                            title="<?php echo $product['is_available'] ? 'Click to Disable' : 'Click to Enable'; ?>">
+                                        <i class="fas fa-<?php echo $product['is_available'] ? 'check' : 'power-off'; ?>"></i>
                                     </button>
                                 </div>
                             </div>
@@ -1095,81 +1284,85 @@ try {
                 <!-- Pagination -->
                 <?php if ($total_pages > 1): ?>
                     <div class="mt-8 flex justify-center">
-                        <div class="flex space-x-1">
+                        <div class="flex space-x-2">
                             <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                                 <a href="?page=<?php echo $i; ?><?php echo !empty($_GET['search']) ? '&search=' . urlencode($_GET['search']) : ''; ?>"
-                                   class="px-3 py-2 border border-gray-300 rounded-lg <?php echo $i === $page ? 'bg-orange-500 text-white' : 'bg-orange-50 text-gray-800 hover:bg-orange-100'; ?>">
+                                   class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-colors <?php echo $i === $page ? 'bg-orange-600 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-orange-50 hover:text-orange-600'; ?>">
                                     <?php echo $i; ?>
                                 </a>
                             <?php endfor; ?>
                         </div>
                     </div>
                 <?php endif; ?>
-                <?php endif; ?>
+            <?php endif; ?>
         </section>
 
         <!-- Product Management Section (CRUD Table) -->
         <section id="product-management" class="mb-8">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Product Management</h2>
+                <h2 class="text-2xl font-bold font-heading text-gray-900">Product Management</h2>
                 <div class="flex space-x-2">
                     <input type="text" id="productSearchInput" placeholder="Search products..." 
-                           class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
-                    <button onclick="filterProducts()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg">
+                           class="form-control w-64">
+                    <button onclick="filterProducts()" class="btn-primary btn-pill">
                         <i class="fas fa-search mr-2"></i>Search
                     </button>
                 </div>
             </div>
 
-            <div class="brand-card rounded-lg shadow-sm overflow-hidden">
+            <div class="content-card overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full">
-                        <thead class="bg-gray-100 border-b border-gray-200">
+                        <thead class="bg-gray-50 border-b border-gray-100">
                             <tr>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Product Name</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Price</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Stock</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Category</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
-                                <th class="px-6 py-3 text-center text-sm font-semibold text-gray-700">Actions</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Product Name</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Price</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Stock</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Category</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="productTableBody" class="divide-y divide-gray-200">
+                        <tbody id="productTableBody" class="divide-y divide-gray-50">
                             <?php if (empty($products)): ?>
                                 <tr>
-                                    <td colspan="6" class="px-6 py-8 text-center text-gray-500">
-                                        <i class="fas fa-inbox text-2xl mb-2"></i>
+                                    <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                                        <i class="fas fa-inbox text-4xl mb-3 text-gray-300"></i>
                                         <p>No products to manage</p>
                                     </td>
                                 </tr>
                             <?php else: ?>
                                 <?php foreach ($products as $product): ?>
                                     <tr class="hover:bg-gray-50 transition-colors" data-product-id="<?php echo $product['id']; ?>" data-product-name="<?php echo htmlspecialchars($product['product_name']); ?>">
-                                        <td class="px-6 py-4 text-sm text-gray-800 font-medium"><?php echo htmlspecialchars($product['product_name']); ?></td>
+                                        <td class="px-6 py-4 text-sm text-gray-900 font-bold"><?php echo htmlspecialchars($product['product_name']); ?></td>
                                         <td class="px-6 py-4 text-sm text-gray-600">₱<?php echo number_format($product['price'], 2); ?></td>
                                         <td class="px-6 py-4 text-sm">
-                                            <span class="<?php echo $product['stock_quantity'] == 0 ? 'text-red-600 font-semibold' : ($product['stock_quantity'] < 5 ? 'text-orange-600 font-semibold' : 'text-green-600'); ?>">
+                                            <span class="<?php echo $product['stock_quantity'] == 0 ? 'text-red-600 font-bold' : ($product['stock_quantity'] < 5 ? 'text-orange-600 font-bold' : 'text-green-600 font-medium'); ?>">
                                                 <?php echo $product['stock_quantity']; ?> units
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 text-sm text-gray-600"><?php echo htmlspecialchars($product['category_name'] ?? 'Uncategorized'); ?></td>
+                                        <td class="px-6 py-4 text-sm text-gray-600">
+                                            <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-medium">
+                                                <?php echo htmlspecialchars($product['category_name'] ?? 'Uncategorized'); ?>
+                                            </span>
+                                        </td>
                                         <td class="px-6 py-4 text-sm">
-                                            <span class="px-3 py-1 rounded-full text-xs font-semibold <?php echo $product['is_available'] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'; ?>">
+                                            <span class="px-3 py-1 rounded-full text-xs font-bold <?php echo $product['is_available'] ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200'; ?>">
                                                 <?php echo $product['is_available'] ? 'Available' : 'Unavailable'; ?>
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 text-sm text-center">
                                             <div class="flex justify-center space-x-2">
                                                 <button onclick="openEditProductModal(<?php echo htmlspecialchars(json_encode($product)); ?>)" 
-                                                        class="text-blue-600 hover:text-blue-800 font-medium" title="Edit">
+                                                        class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 flex items-center justify-center transition-colors" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                                 <button onclick="toggleProductAvailability(<?php echo $product['id']; ?>, <?php echo $product['is_available'] ? 'false' : 'true'; ?>)" 
-                                                        class="<?php echo $product['is_available'] ? 'text-orange-600 hover:text-orange-800' : 'text-green-600 hover:text-green-800'; ?> font-medium" title="<?php echo $product['is_available'] ? 'Disable' : 'Enable'; ?>">
+                                                        class="w-8 h-8 rounded-full flex items-center justify-center transition-colors <?php echo $product['is_available'] ? 'bg-orange-50 text-orange-600 hover:bg-orange-100' : 'bg-green-50 text-green-600 hover:bg-green-100'; ?>" title="<?php echo $product['is_available'] ? 'Disable' : 'Enable'; ?>">
                                                     <i class="fas fa-<?php echo $product['is_available'] ? 'eye-slash' : 'eye'; ?>"></i>
                                                 </button>
                                                 <button onclick="confirmDeleteProduct(<?php echo $product['id']; ?>)" 
-                                                        class="text-red-600 hover:text-red-800 font-medium" title="Delete">
+                                                        class="w-8 h-8 rounded-full bg-red-50 text-red-600 hover:bg-red-100 flex items-center justify-center transition-colors" title="Delete">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </div>
@@ -1184,21 +1377,96 @@ try {
 
             <!-- Product Statistics -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-                <div class="brand-card rounded-lg p-4 text-center">
+                <div class="content-card p-4 text-center">
                     <div class="text-3xl font-bold text-orange-600"><?php echo count($products); ?></div>
-                    <div class="text-sm text-gray-600 mt-1">Total Products</div>
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mt-1">Total Products</div>
                 </div>
-                <div class="brand-card rounded-lg p-4 text-center">
+                <div class="content-card p-4 text-center">
                     <div class="text-3xl font-bold text-green-600"><?php echo count(array_filter($products, fn($p) => $p['is_available'])); ?></div>
-                    <div class="text-sm text-gray-600 mt-1">Available</div>
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mt-1">Available</div>
                 </div>
-                <div class="brand-card rounded-lg p-4 text-center">
+                <div class="content-card p-4 text-center">
                     <div class="text-3xl font-bold text-orange-600"><?php echo count(array_filter($products, fn($p) => $p['stock_quantity'] < 5 && $p['stock_quantity'] > 0)); ?></div>
-                    <div class="text-sm text-gray-600 mt-1">Low Stock</div>
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mt-1">Low Stock</div>
                 </div>
-                <div class="brand-card rounded-lg p-4 text-center">
+                <div class="content-card p-4 text-center">
                     <div class="text-3xl font-bold text-red-600"><?php echo count(array_filter($products, fn($p) => $p['stock_quantity'] == 0)); ?></div>
-                    <div class="text-sm text-gray-600 mt-1">Out of Stock</div>
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mt-1">Out of Stock</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Promotions Section -->
+        <section id="promotions" class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold font-heading text-gray-900">Promotions</h2>
+                    <p class="text-gray-500 text-sm">Manage your discounts and special offers</p>
+                </div>
+                <button onclick="openPromotionModal()"
+                        class="btn-primary btn-pill shadow-lg shadow-orange-200">
+                    <i class="fas fa-plus mr-2"></i> Create Promotion
+                </button>
+            </div>
+
+            <!-- Promotion Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="stats-card bg-orange-50">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-gray-500 uppercase tracking-wide">Total Coupons</p>
+                            <h3 class="text-2xl font-bold text-gray-900 mt-1" id="totalCoupons">0</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-white/50 flex items-center justify-center text-orange-600">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="stats-card bg-blue-50">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-gray-500 uppercase tracking-wide">Total Usage</p>
+                            <h3 class="text-2xl font-bold text-gray-900 mt-1" id="totalUsage">0</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-white/50 flex items-center justify-center text-blue-600">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="stats-card bg-green-50">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-gray-500 uppercase tracking-wide">Revenue Impact</p>
+                            <h3 class="text-2xl font-bold text-gray-900 mt-1" id="revenueImpact">₱0.00</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-white/50 flex items-center justify-center text-green-600">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Active Promotions -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Active Promotions</h3>
+                    <div id="activePromotions" class="space-y-4">
+                        <!-- Loaded via JS -->
+                        <div class="content-card p-8 text-center">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expired/Inactive Promotions -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Past Promotions</h3>
+                    <div id="expiredPromotions" class="space-y-4 opacity-75">
+                        <!-- Loaded via JS -->
+                        <div class="content-card p-8 text-center">
+                            <p class="text-gray-400">No past promotions</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1206,17 +1474,20 @@ try {
         <!-- Food Reels Section -->
         <section id="reels" class="mb-8">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Food Reels</h2>
+                <h2 class="text-2xl font-bold font-heading text-gray-900">Food Reels</h2>
                 <button onclick="openReelUploadModal()"
-                        class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
+                        class="btn-primary btn-pill shadow-lg shadow-orange-200">
                     <i class="fas fa-video mr-2"></i> Upload Reel
                 </button>
             </div>
 
             <div id="reelsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="text-center py-12 col-span-full">
-                    <i class="fas fa-film text-4xl text-gray-300 mb-4"></i>
-                    <p class="text-gray-500">No reels uploaded yet</p>
+                <div class="content-card p-12 text-center col-span-full">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-film text-2xl text-gray-400"></i>
+                    </div>
+                    <p class="text-gray-500 font-medium">No reels uploaded yet</p>
+                    <p class="text-xs text-gray-400 mt-1">Share short videos of your delicious food!</p>
                 </div>
             </div>
         </section>
@@ -1234,28 +1505,28 @@ try {
             </div>
 
             <!-- Quick Stock Update Panel -->
-            <div class="brand-card rounded-lg shadow-sm p-6 mb-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Stock Update</h3>
+            <div class="content-card p-6 mb-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Quick Stock Update</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <?php foreach ($products as $product): ?>
-                        <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="border border-gray-100 rounded-xl p-4 bg-gray-50">
                             <div class="flex items-center justify-between mb-3">
-                                <h4 class="font-medium text-gray-800"><?php echo htmlspecialchars($product['product_name']); ?></h4>
-                                <span class="px-2 py-1 text-xs rounded-full <?php
-                                    echo $product['stock_quantity'] == 0 ? 'bg-red-100 text-red-800' :
-                                         ($product['stock_quantity'] < 5 ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800');
+                                <h4 class="font-bold text-gray-900 text-sm"><?php echo htmlspecialchars($product['product_name']); ?></h4>
+                                <span class="px-2 py-1 text-xs font-bold rounded-full <?php
+                                    echo $product['stock_quantity'] == 0 ? 'bg-red-100 text-red-700' :
+                                         ($product['stock_quantity'] < 5 ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700');
                                 ?>">
-                                    <?php echo $product['stock_quantity']; ?> in stock
+                                    <?php echo $product['stock_quantity']; ?> left
                                 </span>
                             </div>
                             <div class="flex items-center space-x-2">
                                 <input type="number" id="stock_<?php echo $product['id']; ?>"
                                        value="<?php echo $product['stock_quantity']; ?>"
                                        min="0" max="1000"
-                                       class="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+                                       class="form-control flex-1 py-1 px-2 text-sm h-auto">
                                 <button onclick="updateProductStock(<?php echo $product['id']; ?>)"
-                                        class="px-3 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors">
-                                    Update
+                                        class="w-8 h-8 rounded-full bg-orange-500 text-white hover:bg-orange-600 flex items-center justify-center transition-colors shadow-md">
+                                    <i class="fas fa-check"></i>
                                 </button>
                             </div>
                         </div>
@@ -1266,51 +1537,54 @@ try {
     </main>
 
     <!-- Reel Upload Modal -->
-    <div id="reelUploadModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="brand-card rounded-lg w-full max-w-md mx-4">
+    <div id="reelUploadModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="content-card w-full max-w-md mx-4 animate-popIn">
             <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Upload Food Reel</h3>
-                    <button onclick="closeReelUploadModal()" class="text-gray-500 hover:text-gray-700">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold font-heading text-gray-900">Upload Food Reel</h3>
+                    <button onclick="closeReelUploadModal()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
 
                 <form id="reelUploadForm" enctype="multipart/form-data">
                     <div class="mb-4">
-                        <label for="reelVideo" class="block text-sm font-medium text-gray-700 mb-2">Video File (MP4/MOV)</label>
-                        <input type="file" id="reelVideo" name="video" accept="video/mp4,video/quicktime" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
-                        <p class="text-xs text-gray-500 mt-1">Max 100MB</p>
+                        <label for="reelVideo" class="block text-sm font-bold text-gray-700 mb-2">Video File (MP4/MOV)</label>
+                        <div class="relative border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-orange-400 transition-colors bg-gray-50">
+                            <input type="file" id="reelVideo" name="video" accept="video/mp4,video/quicktime" required
+                                   class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                            <p class="text-sm text-gray-500 font-medium">Click to upload video</p>
+                            <p class="text-xs text-gray-400 mt-1">Max 100MB</p>
+                        </div>
                     </div>
 
                     <div class="mb-4">
-                        <label for="reelTitle" class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                        <label for="reelTitle" class="block text-sm font-bold text-gray-700 mb-2">Title</label>
                         <input type="text" id="reelTitle" name="title" placeholder="e.g., Delicious Adobo"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                               class="form-control">
                     </div>
 
                     <div class="mb-4">
-                        <label for="reelDescription" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <label for="reelDescription" class="block text-sm font-bold text-gray-700 mb-2">Description</label>
                         <textarea id="reelDescription" name="description" rows="3" placeholder="Describe your reel..."
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"></textarea>
+                                  class="form-control"></textarea>
                     </div>
 
-                    <div class="mb-4">
-                        <label for="reelProduct" class="block text-sm font-medium text-gray-700 mb-2">Link to Product (Optional)</label>
-                        <select id="reelProduct" name="product_id"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <div class="mb-6">
+                        <label for="reelProduct" class="block text-sm font-bold text-gray-700 mb-2">Link to Product (Optional)</label>
+                        <select id="reelProduct" name="product_id" class="form-control">
                             <option value="">-- Select a product --</option>
                         </select>
                     </div>
 
-                    <div class="flex justify-end space-x-3 mt-6">
+                    <div class="flex justify-end space-x-3">
                         <button type="button" onclick="closeReelUploadModal()"
-                                class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                                class="px-6 py-2.5 rounded-full font-bold text-gray-600 hover:bg-gray-100 transition-colors">
                             Cancel
                         </button>
                         <button type="submit"
-                                class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors">
+                                class="btn-primary btn-pill shadow-lg shadow-orange-200">
                             Upload Reel
                         </button>
                     </div>
@@ -1319,12 +1593,13 @@ try {
         </div>
     </div>
 
-    <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="brand-card rounded-lg w-full max-w-md mx-4">
+    <!-- Product Modal -->
+    <div id="productModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="content-card w-full max-w-md mx-4 animate-popIn">
             <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 id="modalTitle" class="text-xl font-bold">Add New Product</h3>
-                    <button onclick="closeProductModal()" class="text-gray-400 hover:text-gray-600">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="modalTitle" class="text-xl font-bold font-heading text-gray-900">Add New Product</h3>
+                    <button onclick="closeProductModal()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -1334,48 +1609,45 @@ try {
                     <input type="hidden" name="product_id" id="productId">
 
                     <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
-                        <input type="text" id="name" name="name" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <label for="name" class="block text-sm font-bold text-gray-700 mb-2">Product Name</label>
+                        <input type="text" id="name" name="name" required class="form-control">
                     </div>
 
                     <div class="mb-4">
-                        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                        <textarea id="description" name="description" rows="3" required
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"></textarea>
+                        <label for="description" class="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                        <textarea id="description" name="description" rows="3" required class="form-control"></textarea>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="grid grid-cols-2 gap-4 mb-6">
                         <div>
-                            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price (₱)</label>
-                            <input type="number" id="price" name="price" step="0.01" min="0" required
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            <label for="price" class="block text-sm font-bold text-gray-700 mb-2">Price (₱)</label>
+                            <input type="number" id="price" name="price" step="0.01" min="0" required class="form-control">
                         </div>
                         <div>
-                            <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+                            <label for="image" class="block text-sm font-bold text-gray-700 mb-2">Product Image</label>
                             <input type="file" id="image" name="image" accept="image/*" class="hidden">
                             <div class="relative">
                                 <input type="text" id="imageFileName" readonly
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none"
-                                       placeholder="Select an image">
+                                       class="form-control cursor-pointer"
+                                       placeholder="Select image" onclick="document.getElementById('image').click()">
                                 <button type="button" onclick="document.getElementById('image').click()"
-                                        class="absolute right-0 top-0 h-full px-3 bg-gray-200 hover:bg-gray-300 rounded-r-md">
-                                    Browse
+                                        class="absolute right-2 top-1/2 transform -translate-y-1/2 text-orange-500 hover:text-orange-600">
+                                    <i class="fas fa-folder-open"></i>
                                 </button>
                             </div>
                             <div id="imagePreview" class="mt-2 hidden">
-                                <img id="previewImage" src="#" alt="Preview" class="h-20 object-cover rounded">
+                                <img id="previewImage" src="#" alt="Preview" class="h-20 w-full object-cover rounded-xl border border-gray-200">
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex justify-end space-x-3 mt-6">
+                    <div class="flex justify-end space-x-3">
                         <button type="button" onclick="closeProductModal()"
-                                class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                                class="px-6 py-2.5 rounded-full font-bold text-gray-600 hover:bg-gray-100 transition-colors">
                             Cancel
                         </button>
                         <button type="submit"
-                                class="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                                class="btn-primary btn-pill shadow-lg shadow-orange-200">
                             Save Product
                         </button>
                     </div>
@@ -1385,55 +1657,53 @@ try {
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="brand-card rounded-lg p-6 max-w-sm w-full mx-4">
-            <div class="text-center">
-                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-                    <i class="fas fa-exclamation text-red-600"></i>
-                </div>
-                <h3 class="text-lg font-medium text-gray-900 mb-2">Delete Product</h3>
-                <p class="text-gray-500 mb-6">Are you sure you want to delete this product? This action cannot be undone.</p>
-                <div class="flex justify-center space-x-3">
-                    <button type="button" onclick="closeDeleteModal()"
-                            class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
-                        Cancel
-                    </button>
-                    <form id="deleteForm" method="POST">
-                        <input type="hidden" name="action" value="delete_product">
-                        <input type="hidden" name="product_id" id="deleteProductId">
-                        <button type="submit"
-                                class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
-                            Delete
-                        </button>
-                    </form>
-                </div>
+    <div id="deleteModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="content-card p-8 max-w-sm w-full mx-4 animate-popIn text-center">
+            <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-exclamation-triangle text-2xl text-red-500"></i>
             </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Delete Product</h3>
+            <p class="text-gray-500 mb-6">Are you sure you want to delete this product? This action cannot be undone.</p>
+            <div class="flex justify-center space-x-3">
+                <button type="button" onclick="closeDeleteModal()"
+                        class="px-6 py-2.5 rounded-full font-bold text-gray-600 hover:bg-gray-100 transition-colors">
+                    Cancel
+                </button>
+                <form id="deleteForm" method="POST">
+                    <input type="hidden" name="action" value="delete_product">
+                    <input type="hidden" name="product_id" id="deleteProductId">
+                    <button type="submit"
+                            class="px-6 py-2.5 rounded-full font-bold bg-red-500 text-white hover:bg-red-600 shadow-lg shadow-red-200 transition-colors">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Promotion Modal -->
-    <div id="promotionModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="brand-card rounded-lg w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="p-6 border-b">
+    <div id="promotionModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="content-card w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto animate-popIn">
+            <div class="p-6 border-b border-gray-100">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-xl font-bold text-gray-800">Create New Promotion</h3>
-                    <button onclick="closePromotionModal()" class="text-gray-400 hover:text-gray-600">
-                        <i class="fas fa-times text-xl"></i>
+                    <h3 class="text-xl font-bold font-heading text-gray-900">Create New Promotion</h3>
+                    <button onclick="closePromotionModal()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
             </div>
 
             <form id="promotionForm" class="p-6">
                 <div class="mb-4">
-                    <label for="promotion_name" class="block text-sm font-medium text-gray-700 mb-1">Promotion Name</label>
+                    <label for="promotion_name" class="block text-sm font-bold text-gray-700 mb-2">Promotion Name</label>
                     <input type="text" id="promotion_name" name="promotion_name" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                           class="form-control"
                            placeholder="e.g., Weekend Special 15% Off">
                 </div>
 
                 <div class="mb-4">
-                    <label for="promotion_type" class="block text-sm font-medium text-gray-700 mb-1">Promotion Type</label>
-                    <select id="promotion_type" name="promotion_type" required
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <label for="promotion_type" class="block text-sm font-bold text-gray-700 mb-2">Promotion Type</label>
+                    <select id="promotion_type" name="promotion_type" required class="form-control">
                         <option value="">Select promotion type</option>
                         <option value="percentage_discount">Percentage Discount</option>
                         <option value="fixed_discount">Fixed Amount Discount</option>
@@ -1443,57 +1713,54 @@ try {
                 </div>
 
                 <div class="mb-4">
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <label for="description" class="block text-sm font-bold text-gray-700 mb-2">Description</label>
                     <textarea id="description" name="description" rows="3" required
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                              class="form-control"
                               placeholder="Describe your promotion..."></textarea>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                        <label for="discount_value" class="block text-sm font-medium text-gray-700 mb-1">Discount Value</label>
+                        <label for="discount_value" class="block text-sm font-bold text-gray-700 mb-2">Discount Value</label>
                         <input type="number" id="discount_value" name="discount_value" step="0.01" min="0" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                               class="form-control"
                                placeholder="15 or 100.00">
                     </div>
                     <div>
-                        <label for="min_order_amount" class="block text-sm font-medium text-gray-700 mb-1">Min Order Amount (₱)</label>
+                        <label for="min_order_amount" class="block text-sm font-bold text-gray-700 mb-2">Min Order Amount (₱)</label>
                         <input type="number" id="min_order_amount" name="min_order_amount" step="0.01" min="0"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                               class="form-control"
                                placeholder="300.00">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                        <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
-                        <input type="date" id="start_date" name="start_date" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <label for="start_date" class="block text-sm font-bold text-gray-700 mb-2">Start Date</label>
+                        <input type="date" id="start_date" name="start_date" required class="form-control">
                     </div>
                     <div>
-                        <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-                        <input type="date" id="end_date" name="end_date" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <label for="end_date" class="block text-sm font-bold text-gray-700 mb-2">End Date</label>
+                        <input type="date" id="end_date" name="end_date" required class="form-control">
                     </div>
                 </div>
 
                 <div class="mb-6">
-                    <label for="usage_limit" class="block text-sm font-medium text-gray-700 mb-1">Usage Limit (Optional)</label>
+                    <label for="usage_limit" class="block text-sm font-bold text-gray-700 mb-2">Usage Limit (Optional)</label>
                     <input type="number" id="usage_limit" name="usage_limit" min="1"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                           class="form-control"
                            placeholder="Leave empty for unlimited">
                     <p class="text-xs text-gray-500 mt-1">Maximum number of times this promotion can be used</p>
                 </div>
 
-                <div class="flex gap-3">
-                    <button type="submit" onclick="createPromotion()"
-                            class="flex-1 bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>
-                        Create Promotion
-                    </button>
+                <div class="flex justify-end space-x-3">
                     <button type="button" onclick="closePromotionModal()"
-                            class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50">
+                            class="px-6 py-2.5 rounded-full font-bold text-gray-600 hover:bg-gray-100 transition-colors">
                         Cancel
+                    </button>
+                    <button type="submit" onclick="createPromotion()"
+                            class="btn-primary btn-pill shadow-lg shadow-orange-200">
+                        <i class="fas fa-plus mr-2"></i> Create Promotion
                     </button>
                 </div>
             </form>

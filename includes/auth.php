@@ -110,6 +110,10 @@ function clearLoginAttempts($email) {
 
 // Note: Validation functions are now in validators.php
 
+
+// Include session manager for centralized session handling
+require_once __DIR__ . '/session-manager.php';
+
 // ============================================
 // AUTHENTICATION FUNCTIONS
 // ============================================
@@ -176,11 +180,6 @@ function authenticateUser($conn, $email, $password) {
         clearLoginAttempts($email);
 
         // Create authenticated session using session manager
-        // First, require the session manager if not already loaded
-        if (!function_exists('createAuthenticatedSession')) {
-            require_once __DIR__ . '/session-manager.php';
-        }
-        
         createAuthenticatedSession(
             $user['id'],
             $user['username'],
@@ -204,75 +203,8 @@ function authenticateUser($conn, $email, $password) {
     }
 }
 
-// ============================================
-// SESSION VALIDATION & PROTECTION
-// ============================================
-
-/**
- * Check if user is logged in
- */
-function isLoggedIn() {
-    return isset($_SESSION['user_id']) && isset($_SESSION['role']);
-}
-
-/**
- * Get current user role
- */
-function getUserRole() {
-    return $_SESSION['role'] ?? null;
-}
-
-/**
- * Get current user ID
- */
-function getUserId() {
-    return $_SESSION['user_id'] ?? null;
-}
-
-/**
- * Validate session (check IP, timeout, etc.)
- */
-function validateSession() {
-    // Check if session exists
-    if (!isLoggedIn()) {
-        return false;
-    }
-
-    // Check session timeout (1 hour)
-    $timeout = 3600;
-    if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time']) > $timeout) {
-        session_destroy();
-        return false;
-    }
-
-    // Update last activity time
-    $_SESSION['login_time'] = time();
-
-    return true;
-}
-
-/**
- * Require login with role check
- */
-function requireLogin($allowed_roles = []) {
-    if (!validateSession()) {
-        $_SESSION['redirect_to'] = $_SERVER['REQUEST_URI'];
-        header('Location: login.php');
-        exit();
-    }
-
-    if (!empty($allowed_roles) && !in_array(getUserRole(), $allowed_roles)) {
-        // Redirect to correct dashboard based on role
-        redirectToDashboard();
-    }
-}
-
-/**
- * NOTE: redirectToDashboard() and logoutUser() are now in session-manager.php
- * to avoid duplication and ensure centralized session management.
- * These functions are kept here for backward compatibility but should not be used.
- * Use session-manager.php functions instead.
- */
+// NOTE: Session validation and protection functions have been moved to session-manager.php
+// to ensure centralized session management.
 
 // ============================================
 // REGISTRATION FUNCTIONS
