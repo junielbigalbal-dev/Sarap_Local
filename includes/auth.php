@@ -118,17 +118,9 @@ function clearLoginAttempts($email) {
  * Authenticate user and create session
  */
 function authenticateUser($conn, $email, $password) {
-    // Debug helper
-    $log = function($msg) {
-        file_put_contents(__DIR__ . '/../debug_log.txt', date('[Y-m-d H:i:s] ') . "AUTH: " . $msg . "\n", FILE_APPEND);
-    };
-
-    $log("Starting authentication for $email");
-
     // Check rate limiting
     $rate_limit = isLoginRateLimited($email);
     if ($rate_limit['limited']) {
-        $log("Rate limited");
         return [
             'success' => false,
             'message' => 'Too many login attempts. Please try again in ' . $rate_limit['remaining'] . ' minutes.'
@@ -137,7 +129,6 @@ function authenticateUser($conn, $email, $password) {
 
     // Validate email format
     if (!isValidEmail($email)) {
-        $log("Invalid email format");
         recordFailedLoginAttempt($email);
         return [
             'success' => false,
@@ -147,12 +138,10 @@ function authenticateUser($conn, $email, $password) {
 
     try {
         // Query user by email
-        $log("Querying user from DB...");
         $query = "SELECT id, username, email, password, role FROM users WHERE email = ?";
         $stmt = $conn->prepare($query);
         
         if (!$stmt) {
-            $log("DB Prepare failed: " . $conn->error);
             return [
                 'success' => false,
                 'message' => 'Database error. Please try again.'
@@ -162,10 +151,8 @@ function authenticateUser($conn, $email, $password) {
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
-        $log("Query executed. Rows: " . $result->num_rows);
 
         if ($result->num_rows === 0) {
-            $log("User not found");
             recordFailedLoginAttempt($email);
             return [
                 'success' => false,
@@ -177,9 +164,7 @@ function authenticateUser($conn, $email, $password) {
         $stmt->close();
 
         // Verify password
-        $log("Verifying password...");
         if (!password_verify($password, $user['password'])) {
-            $log("Password verification failed");
             recordFailedLoginAttempt($email);
             return [
                 'success' => false,
@@ -196,14 +181,12 @@ function authenticateUser($conn, $email, $password) {
             require_once __DIR__ . '/session-manager.php';
         }
         
-        $log("Creating session...");
         createAuthenticatedSession(
             $user['id'],
             $user['username'],
             $user['email'],
             $user['role']
         );
-        $log("Session created");
 
         return [
             'success' => true,
@@ -213,7 +196,6 @@ function authenticateUser($conn, $email, $password) {
         ];
 
     } catch (Exception $e) {
-        $log("Exception: " . $e->getMessage());
         error_log('Authentication Error: ' . $e->getMessage());
         return [
             'success' => false,

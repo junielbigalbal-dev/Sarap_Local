@@ -17,21 +17,11 @@ $error_message = '';
 $success_message = '';
 $csrf_token = generateCSRFToken();
 
-// Debug logging function
-function debug_trace($msg) {
-    file_put_contents(__DIR__ . '/debug_log.txt', date('[Y-m-d H:i:s] ') . "LOGIN: " . $msg . "\n", FILE_APPEND);
-}
-
-debug_trace("Page accessed");
-
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    debug_trace("POST request received");
-    
     // Check for JSON input
     $content_type = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
     if (strpos($content_type, 'application/json') !== false) {
-        debug_trace("Processing JSON input");
         $input = json_decode(file_get_contents('php://input'), true);
         if (is_array($input)) {
             $_POST = array_merge($_POST, $input);
@@ -40,27 +30,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate CSRF token
     $is_json_request = strpos($content_type, 'application/json') !== false;
-    debug_trace("CSRF check. JSON: " . ($is_json_request ? 'Yes' : 'No'));
     
     if (!$is_json_request && !validateCSRFToken($_POST['csrf_token'] ?? '')) {
-        debug_trace("CSRF failed");
         $error_message = 'Security validation failed. Please try again.';
     } else {
         $email = sanitizeInput($_POST['email'] ?? '');
-        // Don't log password!
-        debug_trace("Attempting auth for: " . $email);
-
+        
         if (empty($email) || empty($_POST['password'])) {
-            debug_trace("Empty credentials");
             $error_message = 'Please complete all fields.';
         } else {
             // Attempt authentication
-            debug_trace("Calling authenticateUser...");
             $auth_result = authenticateUser($conn, $email, $_POST['password']);
-            debug_trace("authenticateUser returned: " . ($auth_result['success'] ? 'Success' : 'Failure'));
 
             if ($auth_result['success']) {
-                debug_trace("Login successful. Redirecting...");
                 // Return JSON response for API clients
                 if ($is_json_request) {
                     header('Content-Type: application/json');
@@ -78,11 +60,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     exit();
                 }
 
+                // Ensure session is written before redirect
+                session_write_close();
+
                 // Redirect to appropriate dashboard
                 redirectToDashboard();
                 exit();
             } else {
-                debug_trace("Login failed: " . $auth_result['message']);
                 $error_message = $auth_result['message'];
             }
         }

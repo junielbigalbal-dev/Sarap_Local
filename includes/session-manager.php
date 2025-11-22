@@ -12,6 +12,16 @@ if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
     ini_set('session.cookie_samesite', 'Strict');
     
+    // Explicitly set cookie params to ensure it works across the entire domain
+    session_set_cookie_params([
+        'lifetime' => 0, // Session cookie
+        'path' => '/',
+        'domain' => '', // Current domain
+        'secure' => isset($_SERVER['HTTPS']), // Only secure if HTTPS
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
+
     // Check for Authorization header (Bearer Token) to support mobile apps
     $headers = getallheaders();
     $auth_header = isset($headers['Authorization']) ? $headers['Authorization'] : (isset($headers['authorization']) ? $headers['authorization'] : null);
