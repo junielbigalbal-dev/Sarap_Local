@@ -190,42 +190,29 @@ try {
     $vendors = [];
 }
 
-// Get customer's favorites
+// Get customer's favorites with details in one query
+$favorites = [];
+$favorite_products = [];
+
 try {
-    $favorites_query = "SELECT product_id FROM favorites WHERE customer_id = ?";
+    $favorites_query = "SELECT p.*, u.business_name as vendor_name 
+                        FROM products p
+                        JOIN favorites f ON p.id = f.product_id
+                        JOIN users u ON p.vendor_id = u.id
+                        WHERE f.customer_id = ?";
     $stmt = $conn->prepare($favorites_query);
     $stmt->bind_param("i", $customer_id);
     $stmt->execute();
-    $favorites_result = $stmt->get_result();
-    $favorites = [];
-    while ($row = $favorites_result->fetch_assoc()) {
-        $favorites[] = $row['product_id'];
+    $result = $stmt->get_result();
+    
+    while ($row = $result->fetch_assoc()) {
+        $favorite_products[] = $row;
+        $favorites[] = $row['id']; // Keep track of IDs for the heart icon check
     }
     $stmt->close();
 } catch (Exception $e) {
-    $favorites = [];
-}
-
-// Fetch detailed info for favorite products to render a Favorites section
-$favorite_products = [];
-if (!empty($favorites)) {
-    try {
-        // Build placeholders for IN clause
-        $placeholders = implode(',', array_fill(0, count($favorites), '?'));
-        $types_in = str_repeat('i', count($favorites));
-        $sql = "SELECT p.*, u.business_name as vendor_name
-                FROM products p
-                JOIN users u ON p.vendor_id = u.id
-                WHERE p.id IN ($placeholders)";
-        $stmt = $conn->prepare($sql);
-        if ($stmt) {
-            $stmt->bind_param($types_in, ...$favorites);
-            $stmt->execute();
-            $res = $stmt->get_result();
-            while ($row = $res->fetch_assoc()) { $favorite_products[] = $row; }
-            $stmt->close();
-        }
-    } catch (Exception $e) {}
+    // Keep empty arrays on error
+    error_log("Error fetching favorites: " . $e->getMessage());
 }
 
 // Handle add to favorites (AJAX - no redirect)
@@ -399,41 +386,41 @@ if (isset($_POST['action']) && $_POST['action'] === 'remove_favorite') {
                 </a>
 
                 <!-- User Actions -->
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2 sm:space-x-4">
                     <!-- Search -->
-                    <a href="search.php" class="relative text-white hover:text-orange-100 transition-colors" title="Search">
-                        <i class="fas fa-search text-xl"></i>
+                    <a href="search.php" class="relative text-white hover:text-orange-100 transition-colors p-1" title="Search">
+                        <i class="fas fa-search text-lg sm:text-xl"></i>
                     </a>
 
                     <!-- Profile (Direct Link) -->
-                    <a href="profile.php" class="relative text-white hover:text-orange-100 transition-colors">
-                        <i class="fas fa-user-circle text-xl"></i>
+                    <a href="profile.php" class="relative text-white hover:text-orange-100 transition-colors p-1">
+                        <i class="fas fa-user-circle text-lg sm:text-xl"></i>
                     </a>
                     <!-- Cart -->
-                    <a href="#cart" class="relative text-white hover:text-orange-100 transition-colors">
-                        <i class="fas fa-shopping-cart text-xl"></i>
-                        <span id="cartBadge" class="cart-count absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                    <a href="#cart" class="relative text-white hover:text-orange-100 transition-colors p-1">
+                        <i class="fas fa-shopping-cart text-lg sm:text-xl"></i>
+                        <span id="cartBadge" class="cart-count absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-orange-500 text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center hidden">0</span>
                     </a>
 
                     <!-- Reels -->
-                    <a href="reels.php" class="relative text-white hover:text-orange-100 transition-colors" title="Food Reels">
-                        <i class="fas fa-film text-xl"></i>
+                    <a href="reels.php" class="relative text-white hover:text-orange-100 transition-colors p-1" title="Food Reels">
+                        <i class="fas fa-film text-lg sm:text-xl"></i>
                     </a>
 
                     <!-- Favorites -->
-                    <a href="#favorites" class="relative text-white hover:text-orange-100 transition-colors">
-                        <i class="fas fa-heart text-xl"></i>
+                    <a href="#favorites" class="relative text-white hover:text-orange-100 transition-colors p-1">
+                        <i class="fas fa-heart text-lg sm:text-xl"></i>
                         <?php if (count($favorites) > 0): ?>
-                            <span class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                            <span class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-orange-500 text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center">
                                 <?php echo count($favorites); ?>
                             </span>
                         <?php endif; ?>
                     </a>
 
                     <!-- Messages -->
-                    <a href="chat.php" class="relative text-white hover:text-orange-100 transition-colors">
-                        <i class="fas fa-comments text-xl"></i>
-                        <span id="messageBadge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                    <a href="chat.php" class="relative text-white hover:text-orange-100 transition-colors p-1">
+                        <i class="fas fa-comments text-lg sm:text-xl"></i>
+                        <span id="messageBadge" class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center hidden">0</span>
                     </a>
                 </div>
             </div>

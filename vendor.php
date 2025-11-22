@@ -24,7 +24,7 @@ $page = 1;
 
 // Get vendor details from users table
 try {
-    $vendor_query = "SELECT * FROM users WHERE id = ? AND role = 'vendor' LIMIT 1";
+    $vendor_query = "SELECT id, username, email, business_name, address, phone, profile_image FROM users WHERE id = ? AND role = 'vendor' LIMIT 1";
     $stmt = $conn->prepare($vendor_query);
     if (!$stmt) {
         throw new Exception('Database error: ' . $conn->error);
@@ -766,17 +766,17 @@ try {
                 </a>
 
                 <!-- User Actions -->
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2 sm:space-x-4">
                     <!-- Search -->
-                    <a href="search.php" class="relative text-white hover:text-orange-100 transition-colors" title="Search">
-                        <i class="fas fa-search text-xl"></i>
+                    <a href="search.php" class="relative text-white hover:text-orange-100 transition-colors p-1" title="Search">
+                        <i class="fas fa-search text-lg sm:text-xl"></i>
                     </a>
 
                     <!-- Notifications -->
                     <div class="relative">
-                        <button onclick="toggleNotificationDropdown()" class="relative text-white hover:text-orange-100 transition-colors">
-                            <i class="fas fa-bell text-xl"></i>
-                            <span id="notificationBadge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                        <button onclick="toggleNotificationDropdown()" class="relative text-white hover:text-orange-100 transition-colors p-1">
+                            <i class="fas fa-bell text-lg sm:text-xl"></i>
+                            <span id="notificationBadge" class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center hidden">0</span>
                         </button>
                         <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
                             <div class="p-4 border-b border-gray-200 flex justify-between items-center">
@@ -790,14 +790,14 @@ try {
                     </div>
 
                     <!-- Profile (Direct Link) -->
-                    <a href="profile.php" class="relative text-white hover:text-orange-100 transition-colors">
-                        <i class="fas fa-user-circle text-xl"></i>
+                    <a href="profile.php" class="relative text-white hover:text-orange-100 transition-colors p-1">
+                        <i class="fas fa-user-circle text-lg sm:text-xl"></i>
                     </a>
 
                     <!-- Messages -->
-                    <a href="chat.php" class="relative text-white hover:text-orange-100 transition-colors">
-                        <i class="fas fa-comments text-xl"></i>
-                        <span id="messageBadge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                    <a href="chat.php" class="relative text-white hover:text-orange-100 transition-colors p-1">
+                        <i class="fas fa-comments text-lg sm:text-xl"></i>
+                        <span id="messageBadge" class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center hidden">0</span>
                     </a>
                 </div>
             </div>

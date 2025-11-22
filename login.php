@@ -106,7 +106,7 @@ $asset_version = time();
 <body class="min-h-screen bg-gray-50 flex flex-col">
 
     <!-- Main Content -->
-    <main class="flex-1 flex items-center justify-center px-4 py-10">
+    <main class="flex-1 flex items-center justify-center px-4 sm:px-6 py-10">
         <section class="w-full max-w-6xl grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center">
             <!-- Left Marketing Panel -->
             <div class="hidden lg:flex flex-col space-y-6">

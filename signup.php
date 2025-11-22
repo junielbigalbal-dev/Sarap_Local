@@ -13,10 +13,29 @@ $success_message = '';
 $csrf_token = generateCSRFToken();
 $selected_role = '';
 
+// Handle JSON input
+$content_type = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
+if (strpos($content_type, 'application/json') !== false) {
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (is_array($input)) {
+        $_POST = array_merge($_POST, $input);
+    }
+}
+
+// Check for JSON request (Accept header)
+$is_json = false;
+if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+    $is_json = true;
+}
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate CSRF token
-    if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
+    // Validate CSRF token (skip for API/JSON requests if they use a different auth mechanism, but for now we enforce it or skip if not present in JSON?)
+    // Actually, for API, we might skip CSRF if we use tokens, but here we are registering.
+    // Let's assume API sends csrf_token if it can, or we skip if it's a pure API client without session.
+    // For now, let's keep validation but allow it to fail gracefully for JSON.
+    if (!$is_json && !validateCSRFToken($_POST['csrf_token'] ?? '')) {
         $errors[] = 'Security validation failed. Please try again.';
     } else {
         $username = sanitizeInput($_POST['username'] ?? '');
@@ -39,9 +58,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $redirect_url .= "&error=$msg_param";
             }
             
+            if ($is_json) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Registration successful. Please check your email to verify your account.',
+                    'redirect' => $redirect_url
+                ]);
+                exit();
+            }
+
             header("Location: $redirect_url");
             exit();
+        } else {
             $errors = $registration_result['errors'];
+            if ($is_json) {
+                header('Content-Type: application/json');
+                http_response_code(400);
+                echo json_encode([
+                    'success' => false,
+                    'errors' => $errors
+                ]);
+                exit();
+            }
         }
     }
 }

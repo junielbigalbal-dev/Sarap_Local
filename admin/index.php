@@ -36,9 +36,9 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
           </div>
         </div>
 
-        <button class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-full shadow-sm transition-colors" onclick="logout()">
-          <i class="fas fa-sign-out-alt mr-2"></i>
-          Logout
+        <button class="inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-full shadow-sm transition-colors" onclick="logout()" title="Logout">
+          <i class="fas fa-sign-out-alt sm:mr-2"></i>
+          <span class="hidden sm:inline">Logout</span>
         </button>
       </div>
     </div>

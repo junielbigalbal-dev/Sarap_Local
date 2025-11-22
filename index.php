@@ -84,7 +84,9 @@
                 </div>
             </div>
             <div class="hero-visual">
-                <img src="images/S.png" alt="Sarap Local Logo" class="hero-logo-image animate-float" />
+                <div class="hero-icon-animation animate-float">
+                    <i class="fas fa-bowl-food"></i>
+                </div>
             </div>
         </div>
     </section>
