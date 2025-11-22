@@ -76,6 +76,59 @@ function createAuthenticatedSession($user_id, $username, $email, $role) {
     session_regenerate_id(true);
     
     return true;
+}
+
+/**
+ * Validate current session
+ */
+function isSessionValid() {
+    // Debug helper
+    $log = function($msg) {
+        file_put_contents(__DIR__ . '/../debug_log.txt', date('[Y-m-d H:i:s] ') . "SESSION_CHECK: " . $msg . "\n", FILE_APPEND);
+    };
+    
+    $log("Checking session validity. Session ID: " . session_id());
+    $log("Session data: " . json_encode($_SESSION));
+
+    // Check if session has required fields
+    if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || !isset($_SESSION['authenticated'])) {
+        $log("FAILED: Missing required fields");
+        return false;
+    }
+    
+    // Check if authenticated flag is true
+    if ($_SESSION['authenticated'] !== true) {
+        $log("FAILED: Not authenticated");
+        return false;
+    }
+    
+    // Check session timeout (1 hour = 3600 seconds)
+    $timeout = 3600;
+    if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time']) > $timeout) {
+        $log("FAILED: Session timeout");
+        destroySession();
+        return false;
+    }
+    
+    // Check IP address (disabled for cloud deployments where IP can change)
+    // Note: Commenting this out for compatibility with load balancers and proxies
+    /*
+    if (isset($_SESSION['ip_address']) && $_SESSION['ip_address'] !== $_SERVER['REMOTE_ADDR']) {
+        // IP changed, session might be hijacked
+        destroySession();
+        return false;
+    }
+    */
+    
+    // Update last activity time
+    $_SESSION['login_time'] = time();
+    
+    $log("SUCCESS: Session is valid");
+    return true;
+}
+
+/**
+ * Get current user info
  */
 function getCurrentUser() {
     if (!isSessionValid()) {
