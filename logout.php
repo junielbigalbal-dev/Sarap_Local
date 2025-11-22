@@ -3,7 +3,7 @@
 session_start();
 
 // Check if user is actually logged in before attempting logout
-if (!isset($_SESSION['user_id']) && !isset($_SESSION['admin_access']) && !isset($_SESSION['vendor_id'])) {
+if (!isset($_SESSION['user_id'])) {
     // User is not logged in, redirect to main page
     header("Location: index.php");
     exit();

@@ -2,10 +2,9 @@
 // Start the session
 session_start();
 
-// Check if admin is actually logged in before attempting logout
-if (!isset($_SESSION['admin_access'])) {
-    // Admin is not logged in, redirect to main page
-    header("Location: ../index.php");
+// Check if user is admin
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: ../login.php");
     exit();
 }
 

@@ -1,8 +1,7 @@
 <?php
 session_start();
 
-// Simple admin authentication - redirect to admin folder
-$_SESSION['admin_access'] = true;
+// Redirect to admin dashboard
 header("Location: admin/index.php");
 exit();
 ?>

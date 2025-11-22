@@ -1,22 +1,5 @@
 <?php
 // Simple JSON stats endpoint for the Sarap Local admin dashboard
-// Returns high-level counts for users, vendors, and customers
-
-session_start();
-header('Content-Type: application/json');
-
-// Basic access control: only allow if admin session flag is present
-if (!isset($_SESSION['admin_access'])) {
-    http_response_code(403);
-    echo json_encode([
-        'error' => 'Forbidden',
-        'message' => 'Admin access required.'
-    ]);
-    exit();
-}
-
-require_once __DIR__ . '/../db.php';
-
 $stats = [
     'total_users' => 0,
     'total_vendors' => 0,
