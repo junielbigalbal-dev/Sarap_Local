@@ -27,3 +27,11 @@
 [2025-11-22 09:13:28] SESSION_CHECK: Checking session validity. Session ID: 08e4t9avm5ntsqe0pumu4lvl83
 [2025-11-22 09:13:28] SESSION_CHECK: Session data: {"user_id":12,"username":"zed10","email":"junielnartea@gmail.com","role":"customer","authenticated":true,"login_time":1763799202,"ip_address":"::1","user_agent":"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/142.0.0.0 Safari\/537.36","session_created":1763799185,"page_history":[{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763799202},{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763799208}]}
 [2025-11-22 09:13:28] SESSION_CHECK: SUCCESS: Session is valid
+[2025-11-22 09:16:27] SESSION_CHECK: Checking session validity. Session ID: 08e4t9avm5ntsqe0pumu4lvl83
+[2025-11-22 09:16:27] SESSION_CHECK: Session data: {"user_id":12,"username":"zed10","email":"junielnartea@gmail.com","role":"customer","authenticated":true,"login_time":1763799208,"ip_address":"::1","user_agent":"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/142.0.0.0 Safari\/537.36","session_created":1763799185,"page_history":[{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763799202},{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763799208},{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763799387}]}
+[2025-11-22 09:16:27] SESSION_CHECK: SUCCESS: Session is valid
+[2025-11-22 09:16:39] SESSION_CHECK: Checking session validity. Session ID: 2mhqutjn2110dk7p443p4ebdut
+[2025-11-22 09:16:39] SESSION_CHECK: Session data: []
+[2025-11-22 09:16:39] SESSION_CHECK: FAILED: Missing required fields
+[2025-11-22 09:16:39] LOGIN: === NEW LOGIN ATTEMPT ===
+[2025-11-22 09:16:39] LOGIN: Session ID: 2mhqutjn2110dk7p443p4ebdut
