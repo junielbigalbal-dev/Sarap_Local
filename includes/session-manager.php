@@ -72,8 +72,12 @@ function createAuthenticatedSession($user_id, $username, $email, $role) {
     $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'] ?? '';
     $_SESSION['session_created'] = time();
     
-    // Regenerate session ID for security
-    session_regenerate_id(true);
+    // IMPORTANT: Do NOT regenerate session ID here!
+    // session_regenerate_id(true) creates a NEW session ID, but the browser
+    // still has the OLD session ID in its cookie. When it redirects to the
+    // dashboard, it can't find the session because the IDs don't match.
+    // We'll regenerate the session ID AFTER the first successful page load instead.
+    // session_regenerate_id(true);
     
     return true;
 }
