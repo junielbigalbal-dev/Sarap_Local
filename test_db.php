@@ -1,76 +1,46 @@
 <?php
-// Enable error reporting
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// test_db.php
+require_once 'db.php';
 
-echo "<h1>Database Connection Test</h1>";
+header('Content-Type: text/plain');
 
-// Get environment variables
-$host = getenv('DB_HOST');
-$user = getenv('DB_USER');
-$pass = getenv('DB_PASSWORD');
-$db   = getenv('DB_NAME');
-$port = getenv('DB_PORT') ? (int)getenv('DB_PORT') : 3306;
+echo "Database Connection Test\n";
+echo "------------------------\n";
 
-echo "<h2>Configuration</h2>";
-echo "<ul>";
-echo "<li><strong>Host:</strong> " . ($host ? $host : "NOT SET") . "</li>";
-echo "<li><strong>Port:</strong> " . $port . "</li>";
-echo "<li><strong>User:</strong> " . ($user ? $user : "NOT SET") . "</li>";
-echo "<li><strong>Password:</strong> " . ($pass ? "SET (Hidden)" : "NOT SET") . "</li>";
-echo "<li><strong>Database:</strong> " . ($db ? $db : "NOT SET") . "</li>";
-echo "</ul>";
-
-echo "<h2>Connection Attempt</h2>";
-echo "<p>Attempting to connect with 5 second timeout...</p>";
-flush();
-ob_flush();
-
-$start_time = microtime(true);
-
-// Initialize mysqli
-$conn = mysqli_init();
-$conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5);
+$start = microtime(true);
 
 try {
-    $connected = @$conn->real_connect($host, $user, $pass, $db, $port);
-    $end_time = microtime(true);
-    $duration = round($end_time - $start_time, 4);
-
-    if ($connected) {
-        echo "<p style='color: green; font-weight: bold;'>✅ SUCCESS! Connected in $duration seconds.</p>";
-        echo "<p>Server Info: " . $conn->server_info . "</p>";
-        echo "<p>Host Info: " . $conn->host_info . "</p>";
+    if ($conn->ping()) {
+        $connect_time = microtime(true) - $start;
+        echo "Connection successful!\n";
+        echo "Connection time: " . number_format($connect_time, 4) . " seconds\n";
         
         // Test query
-        $result = $conn->query("SHOW TABLES");
-        echo "<h3>Tables in Database:</h3>";
+        $query_start = microtime(true);
+        $result = $conn->query("SELECT 1");
+        $query_time = microtime(true) - $query_start;
+        
         if ($result) {
-            echo "<ul>";
-            while ($row = $result->fetch_array()) {
-                echo "<li>" . $row[0] . "</li>";
-            }
-            echo "</ul>";
+            echo "Simple query (SELECT 1) successful!\n";
+            echo "Query time: " . number_format($query_time, 4) . " seconds\n";
         } else {
-            echo "<p style='color: red;'>Failed to list tables: " . $conn->error . "</p>";
+            echo "Query failed: " . $conn->error . "\n";
         }
         
-        $conn->close();
-    } else {
-        echo "<p style='color: red; font-weight: bold;'>❌ FAILED! Duration: $duration seconds.</p>";
-        echo "<p><strong>Error Code:</strong> " . $conn->connect_errno . "</p>";
-        echo "<p><strong>Error Message:</strong> " . $conn->connect_error . "</p>";
+        // Test user query (simulating login)
+        $query_start = microtime(true);
+        $stmt = $conn->prepare("SELECT id, email FROM users LIMIT 1");
+        $stmt->execute();
+        $user_query_time = microtime(true) - $query_start;
+        echo "User table query successful!\n";
+        echo "User query time: " . number_format($user_query_time, 4) . " seconds\n";
         
-        echo "<h3>Troubleshooting Tips:</h3>";
-        echo "<ul>";
-        echo "<li>Check if the Hostname is correct.</li>";
-        echo "<li>Check if the Password is correct.</li>";
-        echo "<li>Ensure the database user has permission to connect from this IP.</li>";
-        echo "<li>If using Railway, ensure the service is active.</li>";
-        echo "</ul>";
+    } else {
+        echo "Connection ping failed: " . $conn->error . "\n";
     }
 } catch (Exception $e) {
-    echo "<p style='color: red; font-weight: bold;'>❌ EXCEPTION!</p>";
-    echo "<p>" . $e->getMessage() . "</p>";
+    echo "Error: " . $e->getMessage() . "\n";
 }
-?>
+
+echo "------------------------\n";
+echo "Test completed.\n";
