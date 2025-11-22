@@ -1391,18 +1391,7 @@ video {
   animation: float 4s ease-in-out infinite;
 }
 
-.hero-icon-animation {
-  font-size: clamp(8rem, 20vw, 12rem);
-  color: var(--primary-orange);
-  filter: drop-shadow(0 10px 20px rgba(196, 106, 43, 0.3));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
-  border-radius: 50%;
-  width: 1.2em;
-  height: 1.2em;
-}
+
 
 /* Wiggle Animation (for icons, attention grabbers) */
 @keyframes wiggle {
