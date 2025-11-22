@@ -1,0 +1,29 @@
+[2025-11-22 09:12:42] SESSION_CHECK: Checking session validity. Session ID: 6hk0g2uq2gbqfg898evi8d4clg
+[2025-11-22 09:12:42] SESSION_CHECK: Session data: {"user_id":12,"username":"zed10","email":"junielnartea@gmail.com","role":"customer","authenticated":true,"login_time":1763784609,"ip_address":"::1","user_agent":"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/142.0.0.0 Safari\/537.36","session_created":1763783463,"page_history":[{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763783463},{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763783466},{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763783669},{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763784121},{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763784194},{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763784609},{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763799162}],"csrf_token":"d486e9e687b8ed0863dfec570d39e9308e93c7c8230d7167cd3268dbd65aa3bd"}
+[2025-11-22 09:12:42] SESSION_CHECK: FAILED: Session timeout
+[2025-11-22 09:12:42] SESSION_CHECK: Checking session validity. Session ID: 08e4t9avm5ntsqe0pumu4lvl83
+[2025-11-22 09:12:42] SESSION_CHECK: Session data: []
+[2025-11-22 09:12:42] SESSION_CHECK: FAILED: Missing required fields
+[2025-11-22 09:12:42] LOGIN: === NEW LOGIN ATTEMPT ===
+[2025-11-22 09:12:42] LOGIN: Session ID: 08e4t9avm5ntsqe0pumu4lvl83
+[2025-11-22 09:13:05] SESSION_CHECK: Checking session validity. Session ID: 08e4t9avm5ntsqe0pumu4lvl83
+[2025-11-22 09:13:05] SESSION_CHECK: Session data: {"csrf_token":"ff32d4dfd763dd99ebaeb7ca7b634b776721e8e9a6ae97ac555906e36c528bbd"}
+[2025-11-22 09:13:05] SESSION_CHECK: FAILED: Missing required fields
+[2025-11-22 09:13:05] LOGIN: === NEW LOGIN ATTEMPT ===
+[2025-11-22 09:13:05] LOGIN: Session ID: 08e4t9avm5ntsqe0pumu4lvl83
+[2025-11-22 09:13:05] LOGIN: POST request received
+[2025-11-22 09:13:05] LOGIN: CSRF validation passed
+[2025-11-22 09:13:05] LOGIN: Calling authenticateUser for: junielnartea@gmail.com
+[2025-11-22 09:13:05] LOGIN: Auth result: SUCCESS
+[2025-11-22 09:13:05] LOGIN: Session data after auth: {"user_id":12,"role":"customer","authenticated":true}
+[2025-11-22 09:13:05] LOGIN: Login successful, redirecting to dashboard
+[2025-11-22 09:13:05] LOGIN: Calling redirectToDashboard
+[2025-11-22 09:13:05] SESSION_CHECK: Checking session validity. Session ID: 08e4t9avm5ntsqe0pumu4lvl83
+[2025-11-22 09:13:05] SESSION_CHECK: Session data: {"user_id":12,"username":"zed10","email":"junielnartea@gmail.com","role":"customer","authenticated":true,"login_time":1763799185,"ip_address":"::1","user_agent":"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/142.0.0.0 Safari\/537.36","session_created":1763799185}
+[2025-11-22 09:13:05] SESSION_CHECK: SUCCESS: Session is valid
+[2025-11-22 09:13:22] SESSION_CHECK: Checking session validity. Session ID: 08e4t9avm5ntsqe0pumu4lvl83
+[2025-11-22 09:13:22] SESSION_CHECK: Session data: {"user_id":12,"username":"zed10","email":"junielnartea@gmail.com","role":"customer","authenticated":true,"login_time":1763799185,"ip_address":"::1","user_agent":"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/142.0.0.0 Safari\/537.36","session_created":1763799185,"page_history":[{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763799202}]}
+[2025-11-22 09:13:22] SESSION_CHECK: SUCCESS: Session is valid
+[2025-11-22 09:13:28] SESSION_CHECK: Checking session validity. Session ID: 08e4t9avm5ntsqe0pumu4lvl83
+[2025-11-22 09:13:28] SESSION_CHECK: Session data: {"user_id":12,"username":"zed10","email":"junielnartea@gmail.com","role":"customer","authenticated":true,"login_time":1763799202,"ip_address":"::1","user_agent":"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/142.0.0.0 Safari\/537.36","session_created":1763799185,"page_history":[{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763799202},{"page":"Customer Dashboard","url":"\/sarap_local\/customer.php","timestamp":1763799208}]}
+[2025-11-22 09:13:28] SESSION_CHECK: SUCCESS: Session is valid

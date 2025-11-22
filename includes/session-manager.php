@@ -10,7 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.use_strict_mode', 1);
     ini_set('session.use_only_cookies', 1);
     ini_set('session.cookie_httponly', 1);
-    ini_set('session.cookie_samesite', 'Strict');
+    ini_set('session.cookie_samesite', 'Lax'); // Changed from Strict to Lax for redirect compatibility
     
     // Explicitly set cookie params to ensure it works across the entire domain
     session_set_cookie_params([
@@ -19,7 +19,7 @@ if (session_status() === PHP_SESSION_NONE) {
         'domain' => '', // Current domain
         'secure' => isset($_SERVER['HTTPS']), // Only secure if HTTPS
         'httponly' => true,
-        'samesite' => 'Strict'
+        'samesite' => 'Lax' // Changed from Strict to Lax - Strict blocks cookies on redirects!
     ]);
 
     // Check for Authorization header (Bearer Token) to support mobile apps
