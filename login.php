@@ -84,10 +84,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     exit();
                 }
 
-                // Ensure session is written before redirect
-                debug_log("Calling session_write_close");
-                session_write_close();
-
+                // DO NOT call session_write_close() here - it prevents the next page from reading the session!
+                // The session will be automatically saved when the script ends
+                
                 // Redirect to appropriate dashboard
                 debug_log("Calling redirectToDashboard");
                 redirectToDashboard();
