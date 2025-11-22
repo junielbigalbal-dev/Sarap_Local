@@ -99,12 +99,15 @@ function isSessionValid() {
         return false;
     }
     
-    // Check IP address (optional but recommended)
+    // Check IP address (disabled for cloud deployments where IP can change)
+    // Note: Commenting this out for compatibility with load balancers and proxies
+    /*
     if (isset($_SESSION['ip_address']) && $_SESSION['ip_address'] !== $_SERVER['REMOTE_ADDR']) {
         // IP changed, session might be hijacked
         destroySession();
         return false;
     }
+    */
     
     // Update last activity time
     $_SESSION['login_time'] = time();
