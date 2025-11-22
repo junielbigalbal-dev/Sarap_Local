@@ -47,6 +47,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $auth_result = authenticateUser($conn, $email, $password);
 
             if ($auth_result['success']) {
+                // Return JSON response for API clients
+                if ($is_json_request) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Login successful',
+                        'token' => session_id(), // Return session ID as token
+                        'user' => [
+                            'id' => $_SESSION['user_id'],
+                            'role' => $_SESSION['role'],
+                            'username' => $_SESSION['username']
+                        ],
+                        'redirect' => getRedirectAfterLogin()
+                    ]);
+                    exit();
+                }
+
                 // Redirect to appropriate dashboard
                 redirectToDashboard();
                 exit();

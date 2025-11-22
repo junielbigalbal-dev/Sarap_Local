@@ -12,6 +12,17 @@ if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
     ini_set('session.cookie_samesite', 'Strict');
     
+    // Check for Authorization header (Bearer Token) to support mobile apps
+    $headers = getallheaders();
+    $auth_header = isset($headers['Authorization']) ? $headers['Authorization'] : (isset($headers['authorization']) ? $headers['authorization'] : null);
+    
+    if ($auth_header && preg_match('/Bearer\s+(.*)$/i', $auth_header, $matches)) {
+        $token = $matches[1];
+        if (!empty($token)) {
+            session_id($token);
+        }
+    }
+
     // Start session
     session_start();
 }
