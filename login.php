@@ -17,8 +17,18 @@ $error_message = '';
 $success_message = '';
 $csrf_token = generateCSRFToken();
 
+// Debug logging function
+function debug_log($msg) {
+    file_put_contents(__DIR__ . '/debug_log.txt', date('[Y-m-d H:i:s] ') . "LOGIN: " . $msg . "\n", FILE_APPEND);
+}
+
+debug_log("=== NEW LOGIN ATTEMPT ===");
+debug_log("Session ID: " . session_id());
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    debug_log("POST request received");
+    
     // Check for JSON input
     $content_type = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
     if (strpos($content_type, 'application/json') !== false) {
@@ -32,24 +42,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $is_json_request = strpos($content_type, 'application/json') !== false;
     
     if (!$is_json_request && !validateCSRFToken($_POST['csrf_token'] ?? '')) {
+        debug_log("CSRF validation failed");
         $error_message = 'Security validation failed. Please try again.';
     } else {
+        debug_log("CSRF validation passed");
         $email = sanitizeInput($_POST['email'] ?? '');
         
         if (empty($email) || empty($_POST['password'])) {
+            debug_log("Empty credentials");
             $error_message = 'Please complete all fields.';
         } else {
+            debug_log("Calling authenticateUser for: " . $email);
+            
             // Attempt authentication
             $auth_result = authenticateUser($conn, $email, $_POST['password']);
+            
+            debug_log("Auth result: " . ($auth_result['success'] ? 'SUCCESS' : 'FAILED'));
+            debug_log("Session data after auth: " . json_encode([
+                'user_id' => $_SESSION['user_id'] ?? 'NOT SET',
+                'role' => $_SESSION['role'] ?? 'NOT SET',
+                'authenticated' => $_SESSION['authenticated'] ?? 'NOT SET'
+            ]));
 
             if ($auth_result['success']) {
+                debug_log("Login successful, redirecting to dashboard");
+                
                 // Return JSON response for API clients
                 if ($is_json_request) {
                     header('Content-Type: application/json');
                     echo json_encode([
                         'success' => true,
                         'message' => 'Login successful',
-                        'token' => session_id(), // Return session ID as token
+                        'token' => session_id(),
                         'user' => [
                             'id' => $_SESSION['user_id'],
                             'role' => $_SESSION['role'],
@@ -61,12 +85,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 // Ensure session is written before redirect
+                debug_log("Calling session_write_close");
                 session_write_close();
 
                 // Redirect to appropriate dashboard
+                debug_log("Calling redirectToDashboard");
                 redirectToDashboard();
                 exit();
             } else {
+                debug_log("Login failed: " . $auth_result['message']);
                 $error_message = $auth_result['message'];
             }
         }

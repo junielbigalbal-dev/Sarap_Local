@@ -76,47 +76,6 @@ function createAuthenticatedSession($user_id, $username, $email, $role) {
     session_regenerate_id(true);
     
     return true;
-}
-
-/**
- * Validate current session
- */
-function isSessionValid() {
-    // Check if session has required fields
-    if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || !isset($_SESSION['authenticated'])) {
-        return false;
-    }
-    
-    // Check if authenticated flag is true
-    if ($_SESSION['authenticated'] !== true) {
-        return false;
-    }
-    
-    // Check session timeout (1 hour = 3600 seconds)
-    $timeout = 3600;
-    if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time']) > $timeout) {
-        destroySession();
-        return false;
-    }
-    
-    // Check IP address (disabled for cloud deployments where IP can change)
-    // Note: Commenting this out for compatibility with load balancers and proxies
-    /*
-    if (isset($_SESSION['ip_address']) && $_SESSION['ip_address'] !== $_SERVER['REMOTE_ADDR']) {
-        // IP changed, session might be hijacked
-        destroySession();
-        return false;
-    }
-    */
-    
-    // Update last activity time
-    $_SESSION['login_time'] = time();
-    
-    return true;
-}
-
-/**
- * Get current user info
  */
 function getCurrentUser() {
     if (!isSessionValid()) {
