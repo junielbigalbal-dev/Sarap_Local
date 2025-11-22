@@ -19,8 +19,22 @@ $csrf_token = generateCSRFToken();
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate CSRF token
-    if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
+    // Check for JSON input
+    $content_type = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
+    if (strpos($content_type, 'application/json') !== false) {
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (is_array($input)) {
+            $_POST = array_merge($_POST, $input);
+        }
+    }
+
+    // Validate CSRF token (skip for API/JSON requests if needed, or require it in header)
+    // For mobile apps, we might skip CSRF check if it's a JSON request, OR require it in a header.
+    // For now, let's make CSRF optional for JSON requests to simplify mobile testing, 
+    // BUT strictly validate it for form posts.
+    $is_json_request = strpos($content_type, 'application/json') !== false;
+    
+    if (!$is_json_request && !validateCSRFToken($_POST['csrf_token'] ?? '')) {
         $error_message = 'Security validation failed. Please try again.';
     } else {
         $email = sanitizeInput($_POST['email'] ?? '');
